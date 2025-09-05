@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITACHI NWS</title>
+    <title>ITACHI HABER</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-bg: #f8f9fa;
@@ -33,11 +32,10 @@
             background-color: var(--primary-bg);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
-            font-family: 'Open Sans', sans-serif;
         }
-        
-        .title-font {
-            font-family: 'Roboto Slab', serif;
+
+        .text-logo {
+            font-family: 'Oswald', sans-serif;
         }
         .view {
             animation: fadeIn 0.5s ease-in-out;
@@ -98,73 +96,41 @@
         .bg-secondary { background-color: var(--secondary-bg); }
         .text-primary { color: var(--text-color); }
         .modal-overlay { background-color: rgba(0, 0, 0, 0.5); }
-        .news-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .comment-item {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-        .news-card-image-container {
-            height: 180px;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
-        .news-card-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease-in-out;
-        }
-        .news-card:hover .news-card-image {
-            transform: scale(1.05);
-        }
-        
+        .font-inter { font-family: 'Inter', sans-serif; }
+        .font-merriweather { font-family: 'Merriweather', serif; }
+        .font-lora { font-family: 'Lora', serif; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen font-inter">
 
     <!-- Navbar -->
-    <nav class="bg-red-700 text-white p-4 shadow-xl sticky top-0 z-50">
+    <nav class="bg-gray-900 text-white p-4 shadow-xl sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-6">
-                <span class="text-4xl font-bold text-white title-font">ITACHI NWS</span>
-                <button onclick="window.showView('home')" class="hover:text-gray-300 transition duration-300 transform hover:scale-105">ANASAYFA</button>
-                <button onclick="window.showView('aboutUs')" class="hover:text-gray-300 transition duration-300 transform hover:scale-105">HAKKIMIZDA</button>
-                <button onclick="window.showView('submitNews')" class="hover:text-gray-300 transition duration-300 transform hover:scale-105">HABER PAYLAŞ</button>
-                <button onclick="window.showView('publishers')" class="hover:text-gray-300 transition duration-300 transform hover:scale-105">YAYINCILARIMIZ</button>
-                <button onclick="window.showView('applyForPublisher')" class="hover:text-gray-300 transition duration-300 transform hover:scale-105">YAYINCI BAŞVURUSU</button>
-                <button onclick="window.showView('publisherDashboard')" id="publisherDashboardBtn" class="hover:text-gray-300 transition duration-300 transform hover:scale-105 hidden">YAYINCI PANELİ</button>
-                <button onclick="window.showView('chat')" class="hover:text-gray-300 transition duration-300 transform hover:scale-105">CANLI SOHBET</button>
+                <span class="text-4xl font-bold text-red-500 text-logo">ITACHI HABER</span>
+                <button onclick="window.showView('home')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Anasayfa</button>
+                <button onclick="window.showView('aboutUs')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Hakkımızda</button>
+                <button onclick="window.showView('submitNews')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Haber Paylaş</button>
+                <button onclick="window.showView('publishers')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Yayıncılar</button>
+                <button onclick="window.showView('applyForPublisher')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Yayıncı Başvuru</button>
+                <button id="publisherDashboardBtn" onclick="window.showView('publisherDashboard')" class="hover:text-red-400 transition duration-300 transform hover:scale-105 hidden">Yayıncı Paneli</button>
             </div>
             <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <button onclick="window.showModal('notificationsModal')" class="relative p-2 rounded-full hover:bg-red-800 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0a3 3 0 11-6 0m6 0v1a3 3 0 11-6 0v-1" />
-                        </svg>
-                        <span id="notificationBadge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full hidden">0</span>
-                    </button>
-                </div>
-                <button id="settingsBtn" class="p-2 rounded-full hover:bg-red-800 transition-colors" onclick="window.showModal('settingsModal')">
+                <button onclick="window.showView('chat')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Sohbet</button>
+                <button id="settingsBtn" class="p-2 rounded-full hover:bg-gray-700 transition-colors" onclick="window.showModal('settingsModal')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.527.272 1.042.417 1.573.424 1.343.018 2.578-.544 3.42-1.503zM12 18a6 6 0 100-12 6 6 0 000 12z" />
                     </svg>
                 </button>
-                <button id="accountsBtn" class="p-2 rounded-full hover:bg-red-800 transition-colors" onclick="window.showModal('accountsModal')">
+                <button id="accountsBtn" class="p-2 rounded-full hover:bg-gray-700 transition-colors" onclick="window.showModal('accountsModal')">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </button>
             </div>
             <div id="authButtons" class="flex items-center space-x-2">
-                <button onclick="window.showAuthModal('login')" class="bg-white text-red-700 font-bold py-2 px-4 rounded-full hover:bg-gray-200 transition duration-300">Giriş Yap</button>
-                <button onclick="window.showAuthModal('signup')" class="bg-gray-900 text-white font-bold py-2 px-4 rounded-full hover:bg-gray-800 transition duration-300">Kayıt Ol</button>
+                <button onclick="window.showAuthModal('login')" class="bg-red-600 text-white font-bold py-2 px-4 rounded-full hover:bg-red-700 transition duration-300">Giriş Yap</button>
+                <button onclick="window.showAuthModal('signup')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-full hover:bg-green-700 transition duration-300">Kayıt Ol</button>
             </div>
             <div id="userProfile" class="hidden flex items-center space-x-2">
                 <span id="userRoleDisplay" class="bg-gray-700 text-white text-xs font-semibold px-2 py-1 rounded-full"></span>
@@ -182,26 +148,26 @@
 
             <!-- Anasayfa -->
             <div id="home" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h1 class="text-4xl font-bold text-primary mb-6 title-font">Son Dakika Haberleri</h1>
+                <h1 class="text-4xl font-bold text-primary mb-6">Son Dakika Haberleri</h1>
                 <div id="newsFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <p class="text-center text-primary/70">Haberler yükleniyor...</p>
+                    <!-- Haberler buraya yüklenecek -->
                 </div>
             </div>
 
             <!-- Hakkımızda Bölümü -->
             <div id="aboutUs" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h1 class="text-4xl font-bold text-primary mb-6 border-b-4 border-red-500 pb-2 title-font">Hakkımızda</h1>
+                <h1 class="text-4xl font-bold text-primary mb-6 border-b-4 border-red-500 pb-2">Hakkımızda</h1>
                 <div class="space-y-6 text-primary leading-relaxed">
-                    <p>ITACHI NWS, güncel gelişmeleri en hızlı ve doğru şekilde okuyucularına ulaştırmayı hedefleyen modern bir haber ajansı simülasyonudur. Şeffaflık, tarafsızlık ve güvenilirlik ilkeleriyle yola çıkarak, toplumsal olaylara, teknolojiye, ekonomiye ve kültüre dair en önemli haberleri derliyoruz.</p>
+                    <p>ITACHI HABER, güncel gelişmeleri en hızlı ve doğru şekilde okuyucularına ulaştırmayı hedefleyen modern bir haber ajansı simülasyonudur. Şeffaflık, tarafsızlık ve güvenilirlik ilkeleriyle yola çıkarak, toplumsal olaylara, teknolojiye, ekonomiye ve kültüre dair en önemli haberleri derliyoruz.</p>
                     <p>Platformumuz, bağımsız gazetecilerin ve vatandaş muhabirlerinin sesini duyurmasına olanak tanır. Kullanıcılarımız, sisteme anonim olarak haber gönderimi yapabilir veya yayıncı statüsü alarak onaylanmış haberleri yayınlayabilir. Her haber, yayınlanmadan önce editör ekibimiz tarafından titizlikle incelenir ve teyit edilir.</p>
                     <p>Misyonumuz, bilgiye erişimi kolaylaştırmak ve herkesin doğru habere ulaşmasını sağlamaktır. Bu platform, yalnızca haber paylaşımını değil, aynı zamanda kullanıcılar arasında açık ve saygılı bir iletişim ortamını da teşvik etmektedir.</p>
-                    <p class="font-semibold text-primary">ITACHI NWS ekibi olarak, sizleri de aramızda görmekten mutluluk duyarız.</p>
+                    <p class="font-semibold text-primary">ITACHI HABER ekibi olarak, sizleri de aramızda görmekten mutluluk duyarız.</p>
                 </div>
             </div>
 
             <!-- Haber Paylaşma Alanı -->
             <div id="submitNews" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 title-font">Haber Paylaşın</h2>
+                <h2 class="text-3xl font-semibold text-primary mb-6">Haber Paylaşın</h2>
                 <div class="bg-red-900 border border-red-700 text-red-200 p-4 rounded-lg mb-4">
                     <p class="font-medium">Anonim olarak haber gönderiyorsunuz. Kimliğiniz gizlidir.</p>
                 </div>
@@ -212,11 +178,11 @@
                     </div>
                     <div>
                         <label for="newsContent" class="block text-primary font-medium mb-2">Haber İçeriği</label>
-                        <textarea type="text" id="newsContent" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-48 transition duration-200 bg-secondary text-primary border-border-color" required></textarea>
+                        <textarea id="newsContent" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-48 transition duration-200 bg-secondary text-primary border-border-color" required></textarea>
                     </div>
                     <div>
-                        <label for="newsFile" class="block text-primary font-medium mb-2">Resim Yükle (Opsiyonel, sadece jpg/png)</label>
-                        <input type="file" id="newsFile" accept="image/jpeg, image/png, image/gif" class="w-full text-primary">
+                        <label for="newsFile" class="block text-primary font-medium mb-2">Dosya Yükle (Opsiyonel)</label>
+                        <input type="file" id="newsFile" class="w-full text-primary">
                     </div>
                     <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Haberi Gönder</button>
                     <div id="newsMessage" class="mt-4 text-center font-medium"></div>
@@ -225,14 +191,14 @@
             
             <!-- Yayıncı Başvuru Alanı -->
             <div id="applyForPublisher" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 title-font">Yayıncı Olarak Başvuru</h2>
+                <h2 class="text-3xl font-semibold text-primary mb-6">Yayıncı Olarak Başvuru</h2>
                 <div class="bg-yellow-900 border border-yellow-700 text-yellow-200 p-4 rounded-lg mb-4">
                     <p class="font-medium">Başvurunuz, bir yönetici tarafından incelenecek ve onaylandığında rolünüz otomatik olarak değişecektir.</p>
                 </div>
                 <p class="text-primary mb-4">Lütfen aşağıdaki soruları yanıtlayarak yayıncı olma isteğinizi bize iletin.</p>
                 <form id="publisherApplicationForm" class="space-y-6">
                     <div>
-                        <label for="q1" class="block text-primary font-medium mb-2">1. Neden ITACHI NWS platformunda yayıncı olmak istiyorsunuz?</label>
+                        <label for="q1" class="block text-primary font-medium mb-2">1. Neden ITACHI HABER platformunda yayıncı olmak istiyorsunuz?</label>
                         <textarea id="q1" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-24 bg-secondary text-primary border-border-color" required></textarea>
                     </div>
                     <div>
@@ -250,7 +216,7 @@
             
             <!-- Yayıncılar Listesi -->
             <div id="publishers" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2 title-font">Yayıncılarımız</h2>
+                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Yayıncılarımız</h2>
                 <ul id="publishersList" class="list-disc list-inside space-y-3 text-primary">
                     <!-- Yayıncılar buraya yüklenecek -->
                 </ul>
@@ -258,7 +224,7 @@
 
             <!-- Yayıncı Paneli -->
             <div id="publisherDashboard" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2 title-font">Yayıncı Paneli</h2>
+                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Yayıncı Paneli</h2>
                 <div class="space-y-8">
                     <!-- Bekleyen Haberler -->
                     <div>
@@ -296,7 +262,7 @@
 
             <!-- Sohbet Alanı -->
             <div id="chat" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2 title-font">Canlı Sohbet</h2>
+                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Canlı Sohbet</h2>
                 <div id="chatBox" class="bg-primary h-96 p-4 rounded-lg overflow-y-auto mb-4 border border-border-color flex flex-col-reverse">
                     <!-- Sohbet mesajları buraya gelecek -->
                 </div>
@@ -308,7 +274,7 @@
 
             <!-- Ayarlar Menüsü -->
             <div id="settings" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2 title-font">Hesap Ayarları</h2>
+                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Hesap Ayarları</h2>
                 <div id="settingsMessage" class="mt-4 text-center font-medium"></div>
 
                 <div class="space-y-8">
@@ -339,7 +305,7 @@
         <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[99]">
             <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 id="authModalTitle" class="text-3xl font-bold text-gray-100 title-font"></h2>
+                    <h2 id="authModalTitle" class="text-3xl font-bold text-gray-100"></h2>
                     <button onclick="window.closeAuthModal()" class="text-gray-400 hover:text-gray-100 transition duration-300 transform hover:scale-110">&times;</button>
                 </div>
                 <form id="authForm" class="space-y-6">
@@ -356,38 +322,12 @@
                 </form>
             </div>
         </div>
-        
-        <!-- News Detail Modal -->
-        <div id="newsDetailModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[99]">
-            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-2xl overflow-y-auto max-h-[90vh]">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 id="newsDetailTitle" class="text-3xl font-bold text-gray-100 title-font"></h2>
-                    <button onclick="window.closeModal('newsDetailModal')" class="text-gray-400 hover:text-gray-100 transition duration-300 transform hover:scale-110">&times;</button>
-                </div>
-                <img id="newsDetailImage" class="news-image hidden" alt="Haber Görseli">
-                <p id="newsDetailContent" class="text-gray-300 mb-6 text-lg leading-relaxed"></p>
-
-                <!-- Yorumlar Bölümü -->
-                <div class="mt-8 border-t-2 border-red-500 pt-6">
-                    <h3 class="text-2xl font-bold text-gray-100 mb-4 title-font">Yorumlar</h3>
-                    <div id="commentsList" class="space-y-4 max-h-60 overflow-y-auto mb-4">
-                        <!-- Yorumlar buraya yüklenecek -->
-                    </div>
-                    
-                    <!-- Yorum Ekleme Formu -->
-                    <form id="commentForm" class="flex items-end space-x-4">
-                        <textarea id="commentInput" class="flex-grow p-3 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Bir yorum yazın..." required></textarea>
-                        <button type="submit" class="bg-red-600 text-white font-bold py-3 px-6 rounded-full hover:bg-red-700 transition duration-300">Gönder</button>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <!-- Message Box -->
         <div id="messageBox" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[100]">
             <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-sm">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 id="messageBoxTitle" class="text-3xl font-bold text-gray-100 title-font"></h2>
+                    <h2 id="messageBoxTitle" class="text-3xl font-bold text-gray-100"></h2>
                     <button onclick="window.closeMessageBox()" class="text-gray-400 hover:text-gray-100 transition duration-300 transform hover:scale-110">&times;</button>
                 </div>
                 <p id="messageBoxContent" class="text-gray-300 mb-6"></p>
@@ -400,12 +340,20 @@
     <div id="settingsModal" class="modal-overlay hidden fixed inset-0 flex items-center justify-center p-4 z-50">
         <div class="card w-full max-w-md p-6 rounded-xl shadow-lg relative">
             <button id="closeSettingsBtn" class="absolute top-4 right-4 text-xl text-primary">&times;</button>
-            <h3 class="text-xl font-bold mb-4 text-primary title-font">Ayarlar</h3>
+            <h3 class="text-xl font-bold mb-4 text-primary">Ayarlar</h3>
             <div class="mb-4">
                 <label class="block text-primary mb-2">Tema Seçimi</label>
                 <select id="themeSelect" class="w-full p-2 rounded-lg bg-secondary text-primary border border-border-color">
                     <option value="light">Açık Tema</option>
                     <option value="dark">Koyu Tema</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-primary mb-2">Yazı Fontu</label>
+                <select id="fontSelect" class="w-full p-2 rounded-lg bg-secondary text-primary border border-border-color">
+                    <option value="font-inter">Inter (Varsayılan)</option>
+                    <option value="font-merriweather">Merriweather</option>
+                    <option value="font-lora">Lora</option>
                 </select>
             </div>
         </div>
@@ -415,7 +363,7 @@
     <div id="accountsModal" class="modal-overlay hidden fixed inset-0 flex items-center justify-center p-4 z-50">
         <div class="card w-full max-w-lg p-6 rounded-xl shadow-lg relative">
             <button id="closeAccountsBtn" class="absolute top-4 right-4 text-xl text-primary">&times;</button>
-            <h3 class="text-xl font-bold mb-4 text-primary title-font">Kullanıcı Yönetimi</h3>
+            <h3 class="text-xl font-bold mb-4 text-primary">Kullanıcı Yönetimi</h3>
             <p id="userIdDisplay" class="text-sm mb-4 break-all text-primary/70">Kullanıcı Kimliği: Yükleniyor...</p>
             <div class="mb-4">
                 <h4 class="font-semibold mb-2 text-primary">Kullanıcı Listesi</h4>
@@ -426,49 +374,34 @@
              <p id="messageBoxModal" class="text-sm text-center mt-4 hidden p-2 rounded-md"></p>
         </div>
     </div>
-
-    <!-- Notifications Modal -->
-    <div id="notificationsModal" class="modal-overlay hidden fixed inset-0 flex items-center justify-center p-4 z-50">
-        <div class="card w-full max-w-md p-6 rounded-xl shadow-lg relative">
-            <button onclick="window.closeModal('notificationsModal')" class="absolute top-4 right-4 text-xl text-primary">&times;</button>
-            <h3 class="text-xl font-bold mb-4 text-primary title-font">Bildirimler</h3>
-            <div id="notificationList" class="space-y-4 max-h-80 overflow-y-auto">
-                <p class="text-primary/70">Henüz bildiriminiz yok.</p>
-            </div>
-        </div>
-    </div>
     
     <!-- Notification Container -->
     <div id="notificationContainer" class="notification-container"></div>
 
     <!-- Footer -->
-    <footer class="bg-red-700 text-gray-200 text-center p-6 mt-8">
-        <p>&copy; 2024 ITACHI NWS. Tüm Hakları Saklıdır.</p>
+    <footer class="bg-gray-900 text-gray-400 text-center p-6 mt-8">
+        <p>&copy; 2024 ITACHI HABER. Tüm Hakları Saklıdır.</p>
     </footer>
 
     <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateEmail, updatePassword, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateEmail, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
-        // Firebase configuration and variables
-        const __app_id = "itachi-haber-v1";
-        const __firebase_config = `{
-            "apiKey": "AIzaSyD-nr4EJnAmyurBGMJ7JQzqdC4kYaVHoTI",
-            "authDomain": "esee-240a6.firebaseapp.com",
-            "projectId": "esee-240a6",
-            "storageBucket": "esee-240a6.appspot.com",
-            "messagingSenderId": "1016496897853",
-            "appId": "1:1016496897853:web:631d976b5e7c2423194f54",
-            "measurementId": "G-72ZLZ5B9BZ"
-        }`;
-        const __initial_auth_token = "";
-
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
+        // Firebase yapılandırma bilgileri
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-nr4EJnAmyurBGMJ7JQzqdC4kYaVHoTI",
+            authDomain: "esee-240a6.firebaseapp.com",
+            projectId: "esee-240a6",
+            storageBucket: "esee-240a6.appspot.com",
+            messagingSenderId: "1016496897853",
+            appId: "1:1016496897853:web:631d976b5e7c2423194f54",
+            measurementId: "G-72ZLZ5B9BZ"
+        };
+        const appId = "1:1016496897853:web:631d976b5e7c2423194f54";
+        
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -477,7 +410,6 @@
         let currentUserId = null;
         let isPublisher = false;
         let isAuthReady = false;
-        let notificationsCount = 0;
 
         // UI elements
         const body = document.body;
@@ -514,26 +446,17 @@
         const createPublisherMessage = document.getElementById('createPublisherMessage');
         const newsFileInput = document.getElementById('newsFile');
         const notificationContainer = document.getElementById('notificationContainer');
+        
+        // New UI elements for settings and accounts
         const settingsModal = document.getElementById('settingsModal');
         const accountsModal = document.getElementById('accountsModal');
         const closeSettingsBtn = document.getElementById('closeSettingsBtn');
         const closeAccountsBtn = document.getElementById('closeAccountsBtn');
         const themeSelect = document.getElementById('themeSelect');
+        const fontSelect = document.getElementById('fontSelect');
         const usersList = document.getElementById('usersList');
         const userIdDisplay = document.getElementById('userIdDisplay');
         const messageBoxModal = document.getElementById('messageBoxModal');
-        const notificationsModal = document.getElementById('notificationsModal');
-        const notificationList = document.getElementById('notificationList');
-        const notificationBadge = document.getElementById('notificationBadge');
-
-        // News Detail Modal elements
-        const newsDetailModal = document.getElementById('newsDetailModal');
-        const newsDetailTitle = document.getElementById('newsDetailTitle');
-        const newsDetailImage = document.getElementById('newsDetailImage');
-        const newsDetailContent = document.getElementById('newsDetailContent');
-        const commentsList = document.getElementById('commentsList');
-        const commentForm = document.getElementById('commentForm');
-        const commentInput = document.getElementById('commentInput');
 
         // Firestore collection references
         const newsCollection = collection(db, `artifacts/${appId}/public/data/news`);
@@ -541,40 +464,6 @@
         const publishersCollection = collection(db, `artifacts/${appId}/public/data/publishers`);
         const publisherApplicationsCollection = collection(db, `artifacts/${appId}/public/data/publisherApplications`);
         const usersCollection = collection(db, `artifacts/${appId}/public/data/users`);
-        const notificationsCollection = collection(db, `artifacts/${appId}/users/notifications`);
-        
-        const fictionalNewsData = [
-            {
-                id: '1',
-                title: 'Konuşan Ağaç Gözcüleri Şaşırttı',
-                content: 'Bilinmeyen bir bölgede keşfedilen ve "Konuşan Ağaç" adı verilen meşe ağacı, bilim dünyasında büyük bir heyecan yarattı. Ağaç, ziyaretçilere bilmece sormasıyla gündeme geldi. İlk bilmecenin cevabını bulan kişi, "Hayatın Anlamı" konulu bir kitap yazacağını söyledi.',
-                imageUrl: 'https://placehold.co/600x400/2a2e34/e3e3e3?text=Konusan+Agac'
-            },
-            {
-                id: '2',
-                title: 'Uçan Simitler Şehri Ele Geçirdi',
-                content: 'Sabah saatlerinde gökyüzünde beliren devasa simitler, şehri sevinçle karşılanan bir sürprizle doldurdu. Herkes bu lezzetli fenomenin arkasındaki gizemi merak ediyor. Belediye başkanı "Simit krizi değil, simit şöleni yaşıyoruz!" diyerek halkı sakinleştirmeye çalıştı.',
-                imageUrl: 'https://placehold.co/600x400/2a2e34/e3e3e3?text=Ucan+Simit'
-            },
-            {
-                id: '3',
-                title: 'Kedi, Daire Başkanı Oldu',
-                content: 'Yerel bir belediyede çalışan ve adı "Bıyık" olan bir kedi, olağanüstü yönetim becerileri sayesinde yeni Daire Başkanı olarak atandı. Ofis içi hiyerarşiyi tamamen değiştiren Bıyık, ilk kararnamesiyle mesai saatlerine "zorunlu şekerleme molası" getirdi.',
-                imageUrl: 'https://placehold.co/600x400/2a2e34/e3e3e3?text=Kedi+Baskan'
-            },
-            {
-                id: '4',
-                title: 'Işınlanma Teknolojisi Yanlışlıkla Tost Makinesi Yarattı',
-                content: 'Evrensel Ulaşım Araştırma Laboratuvarı, üzerinde çalıştığı ışınlanma projesinin bir sonucu olarak yanlışlıkla mükemmel bir tost makinesi üretti. Araştırma ekibi, "Hedefimiz uzaydı ama geldiğimiz nokta çok daha lezzetli oldu," açıklamasında bulundu.',
-                imageUrl: 'https://placehold.co/600x400/2a2e34/e3e3e3?text=Işinlanma+Hatasi'
-            },
-            {
-                id: '5',
-                title: 'Ay, Gece Yarıları Mor Renge Bürünüyor',
-                content: 'Gökbilimciler, son birkaç aydır Ay\'ın belirli gecelerde mor renge dönüştüğünü gözlemlediklerini bildirdi. Bu kozmik olayın nedeni henüz bilinmiyor ancak halk arasında "Ay\'ın Sürprizi" olarak adlandırıldı.',
-                imageUrl: 'https://placehold.co/600x400/2a2e34/e3e3e3?text=Mor+Ay'
-            }
-        ];
         
         // --- UI Functions ---
         window.showView = (viewId) => {
@@ -597,18 +486,13 @@
         
         window.showModal = (modalId) => {
             document.getElementById(modalId).classList.remove('hidden');
-            if (modalId === 'notificationsModal') {
-                updateNotificationBadge(0);
-                const listItems = notificationList.querySelectorAll('.notification-item');
-                listItems.forEach(item => item.classList.add('read'));
-            }
         };
 
         window.closeModal = (modalId) => {
             document.getElementById(modalId).classList.add('hidden');
         };
 
-        window.showNotification = async (message, type = 'info') => {
+        window.showNotification = (message, type = 'info') => {
             const notification = document.createElement('div');
             notification.classList.add('notification', type);
             notification.innerHTML = `
@@ -624,19 +508,6 @@
             setTimeout(() => {
                 notification.remove();
             }, 5000);
-            
-            if (currentUserId) {
-                try {
-                    await addDoc(collection(db, `artifacts/${appId}/users/${currentUserId}/notifications`), {
-                        message: message,
-                        type: type,
-                        timestamp: new Date(),
-                        isRead: false
-                    });
-                } catch (error) {
-                    console.error("Bildirim kaydedilirken hata oluştu:", error);
-                }
-            }
         };
 
         window.showAuthModal = (mode) => {
@@ -667,51 +538,29 @@
             }, 3000);
         }
 
-        window.openNewsDetail = (newsData) => {
-            newsDetailTitle.textContent = newsData.title;
-            newsDetailContent.textContent = newsData.content;
-            newsDetailImage.src = newsData.imageUrl || 'https://placehold.co/600x400/2a2e34/e3e3e3?text=ITACHI+NWS';
-            newsDetailImage.classList.remove('hidden');
-            newsDetailModal.dataset.newsId = newsData.id;
-            window.showModal('newsDetailModal');
-            loadComments(newsData.id);
-        };
-        
-        function updateNotificationBadge(count) {
-            notificationsCount = count;
-            if (count > 0) {
-                notificationBadge.textContent = count;
-                notificationBadge.classList.remove('hidden');
-            } else {
-                notificationBadge.classList.add('hidden');
-            }
-        }
-
         // --- Persistent Settings ---
         function loadSettings() {
             const savedTheme = localStorage.getItem('theme');
+            const savedFont = localStorage.getItem('font');
+
             if (savedTheme) {
                 body.classList.remove('light', 'dark');
                 body.classList.add(savedTheme);
                 themeSelect.value = savedTheme;
             }
+            if (savedFont) {
+                body.className = body.className.split(' ').filter(c => !c.startsWith('font-')).join(' ');
+                body.classList.add(savedFont);
+                fontSelect.value = savedFont;
+            }
         }
 
         function saveSettings() {
             localStorage.setItem('theme', themeSelect.value);
+            localStorage.setItem('font', fontSelect.value);
         }
 
         // --- Auth Functions ---
-        async function authenticateUser() {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                try {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } catch (error) {
-                    console.error("Custom token sign-in error:", error);
-                }
-            }
-        }
-
         window.handleLogin = async (e) => {
             e.preventDefault();
             const email = authEmailInput.value;
@@ -756,6 +605,7 @@
             }
         };
 
+        // Oturum durumundaki değişiklikleri dinler
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserId = user.uid;
@@ -770,6 +620,7 @@
                     const userData = userDoc.data();
                     userRole = userData.role;
                 } else {
+                    // Create user document if it doesn't exist (e.g. anonymous sign-in)
                     await setDoc(userDocRef, { email: user.email, role: 'Okur' }, { merge: true });
                 }
 
@@ -778,26 +629,20 @@
 
                 isPublisher = userRole === 'Yayıncı' || userRole === 'Yönetici';
 
-                if (publisherDashboardBtn) {
-                     if (isPublisher || user.email === 'baranss283@gmail.com') {
-                         publisherDashboardBtn.classList.remove('hidden');
-                     } else {
-                         publisherDashboardBtn.classList.add('hidden');
-                     }
-                 }
-                 loadUserNotifications();
+                if (isPublisher || user.email === 'baranss283@gmail.com') {
+                    publisherDashboardBtn.classList.remove('hidden');
+                } else {
+                    publisherDashboardBtn.classList.add('hidden');
+                }
             } else {
                 currentUserId = null;
                 isPublisher = false;
-                if(publisherDashboardBtn) {
-                     publisherDashboardBtn.classList.add('hidden');
-                }
+                publisherDashboardBtn.classList.add('hidden');
                 authButtons.classList.remove('hidden');
                 userProfile.classList.add('hidden');
-                updateNotificationBadge(0);
-                notificationList.innerHTML = `<p class="text-primary/70">Henüz bildiriminiz yok.</p>`;
             }
             isAuthReady = true;
+            // Load data only after authentication state is ready
             if (isAuthReady) {
                 loadNewsFeed();
                 loadChatMessages();
@@ -905,32 +750,6 @@
             }
         });
 
-        commentForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAuthReady || !auth.currentUser) {
-                window.showMessageBox("Hata", "Yorum yapmak için giriş yapmalısınız.");
-                return;
-            }
-            const newsId = newsDetailModal.dataset.newsId;
-            const commentText = commentInput.value;
-
-            if (!commentText || !newsId) return;
-
-            try {
-                const commentsCollectionRef = collection(db, `artifacts/${appId}/public/data/news/${newsId}/comments`);
-                await addDoc(commentsCollectionRef, {
-                    comment: commentText,
-                    userId: currentUserId,
-                    timestamp: new Date()
-                });
-                commentInput.value = '';
-                window.showNotification('Yorumunuz gönderildi!', 'success');
-            } catch (error) {
-                console.error("Yorum gönderme hatası:", error);
-                window.showNotification('Yorum gönderilirken bir hata oluştu.', 'error');
-            }
-        });
-
         updateEmailForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (!isAuthReady || !auth.currentUser) {
@@ -1004,30 +823,35 @@
         });
 
         // --- Real-time Listeners ---
-        function loadNewsFeed(newsItems) {
-            newsFeed.innerHTML = '';
-            if (!newsItems || newsItems.length === 0) {
-                newsFeed.innerHTML = '<p class="text-center text-primary/70">Henüz yayınlanmış haber bulunmuyor.</p>';
-            } else {
-                newsItems.forEach(newsData => {
-                    const newsItem = document.createElement('div');
-                    newsItem.classList.add('news-card', 'card', 'p-6', 'rounded-xl', 'shadow-md', 'cursor-pointer');
-                    newsItem.onclick = () => window.openNewsDetail(newsData);
-                    
-                    const imageUrl = newsData.imageUrl || 'https://placehold.co/600x400/2a2e34/e3e3e3?text=ITACHI+NWS';
+        function loadNewsFeed() {
+            if (!isAuthReady) return;
+            onSnapshot(query(newsCollection, where('status', '==', 'approved')), (snapshot) => {
+                newsFeed.innerHTML = '';
+                if (snapshot.empty) {
+                    newsFeed.innerHTML = '<p class="text-primary/70">Henüz yayınlanmış haber bulunmuyor.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const newsData = doc.data();
+                        const newsItem = document.createElement('div');
+                        newsItem.classList.add('card', 'p-6', 'rounded-xl', 'shadow-md');
+                        
+                        let fileHtml = '';
+                        if (newsData.fileUrl) {
+                            fileHtml = `<a href="${newsData.fileUrl}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 transform hover:scale-105 inline-block mt-4">Dosyayı İndir</a>`;
+                        }
 
-                    newsItem.innerHTML = `
-                        <div class="news-card-image-container">
-                            <img src="${imageUrl}" alt="${newsData.title || 'Haber Görseli'}" class="news-card-image">
-                        </div>
-                        <h3 class="text-xl font-bold text-primary mt-4 title-font">${newsData.title || 'Başlıksız Haber'}</h3>
-                        <p class="text-primary/70 mt-2 text-sm">${newsData.content.substring(0, 100)}...</p>
-                    `;
-                    newsFeed.appendChild(newsItem);
-                });
-            }
+                        newsItem.innerHTML = `
+                            <h3 class="text-xl font-bold text-primary">${newsData.title || 'Başlıksız Haber'}</h3>
+                            <p class="text-primary/70 mt-2">${newsData.content}</p>
+                            ${fileHtml}
+                            <p class="text-sm text-primary/50 mt-4">Yayınlanma Tarihi: ${newsData.createdAt?.toDate().toLocaleDateString() || 'Bilinmiyor'}</p>
+                        `;
+                        newsFeed.appendChild(newsItem);
+                    });
+                }
+            });
         }
-        
+
         function loadPendingNews() {
             if (!isAuthReady) return;
             onSnapshot(query(newsCollection, where('status', '==', 'pending')), (snapshot) => {
@@ -1042,16 +866,11 @@
                         
                         let fileHtml = '';
                         if (newsData.fileUrl) {
-                             const isImage = newsData.fileUrl.match(/\.(jpeg|jpg|gif|png)$/i);
-                             if (isImage) {
-                                  fileHtml = `<img src="${newsData.fileUrl}" alt="Haber Görseli" class="news-image mt-4">`;
-                             } else {
-                                  fileHtml = `<a href="${newsData.fileUrl}" target="_blank" class="text-blue-400 hover:underline">Ekli Dosya: ${newsData.fileName}</a>`;
-                             }
+                            fileHtml = `<a href="${newsData.fileUrl}" target="_blank" class="text-blue-400 hover:underline">Ekli Dosya: ${newsData.fileName}</a>`;
                         }
 
                         newsItem.innerHTML = `
-                            <h3 class="text-xl font-semibold text-primary title-font">${newsData.title || 'Başlıksız'}</h3>
+                            <h3 class="text-xl font-semibold text-primary">${newsData.title || 'Başlıksız'}</h3>
                             <p class="text-primary/70 mt-2">${newsData.content}</p>
                             ${fileHtml}
                             <div class="mt-4 space-x-2">
@@ -1161,63 +980,6 @@
                 chatBox.scrollTop = chatBox.scrollHeight;
             });
         }
-
-        function loadComments(newsId) {
-            const commentsCollectionRef = collection(db, `artifacts/${appId}/public/data/news/${newsId}/comments`);
-            onSnapshot(commentsCollectionRef, async (snapshot) => {
-                commentsList.innerHTML = '';
-                if (snapshot.empty) {
-                    commentsList.innerHTML = '<p class="text-gray-400">Bu habere henüz yorum yapılmamış.</p>';
-                } else {
-                    const comments = snapshot.docs.map(doc => doc.data());
-                    comments.sort((a, b) => a.timestamp.toDate() - b.timestamp.toDate());
-
-                    const usersPromises = comments.map(comment => getDoc(doc(usersCollection, comment.userId)));
-                    const usersDocs = await Promise.all(usersPromises);
-                    const usersMap = new Map(usersDocs.map(userDoc => [userDoc.id, userDoc.data()]));
-
-                    comments.forEach(comment => {
-                        const user = usersMap.get(comment.userId) || { email: 'Anonim Kullanıcı', role: 'Okur' };
-                        const commentElement = document.createElement('div');
-                        commentElement.classList.add('comment-item');
-                        commentElement.innerHTML = `
-                            <p class="font-semibold text-gray-100">${user.email} <span class="text-sm text-gray-400">(${user.role})</span></p>
-                            <p class="text-gray-300">${comment.comment}</p>
-                            <p class="text-xs text-gray-500 mt-1">${comment.timestamp.toDate().toLocaleString('tr-TR')}</p>
-                        `;
-                        commentsList.appendChild(commentElement);
-                    });
-                }
-            });
-        }
-        
-        function loadUserNotifications() {
-            if (!currentUserId) return;
-            onSnapshot(collection(db, `artifacts/${appId}/users/${currentUserId}/notifications`), (snapshot) => {
-                const notifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                notifications.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
-
-                notificationList.innerHTML = '';
-                let unreadCount = 0;
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = `<p class="text-primary/70">Henüz bildiriminiz yok.</p>`;
-                } else {
-                    notifications.forEach(notif => {
-                        if (!notif.isRead) {
-                            unreadCount++;
-                        }
-                        const notifItem = document.createElement('div');
-                        notifItem.classList.add('p-3', 'rounded-lg', 'border', 'border-border-color', 'notification-item', notif.isRead ? '' : 'bg-red-500/10');
-                        notifItem.innerHTML = `
-                            <p class="font-semibold text-primary">${notif.message}</p>
-                            <p class="text-xs text-primary/70">${notif.timestamp.toDate().toLocaleString('tr-TR')}</p>
-                        `;
-                        notificationList.appendChild(notifItem);
-                    });
-                }
-                updateNotificationBadge(unreadCount);
-            });
-        }
         
         // --- Publisher Actions ---
         window.approveNews = async (docId) => {
@@ -1311,15 +1073,19 @@
             saveSettings();
         });
 
-        // İlk görünümü ayarla ve kimlik doğrulama işlemini başlat
+        fontSelect.addEventListener('change', () => {
+            body.className = body.className.split(' ').filter(c => !c.startsWith('font-')).join(' ');
+            body.classList.add(fontSelect.value);
+            saveSettings();
+        });
+
+        // İlk görünümü ayarla
         window.showView('home');
-        authenticateUser();
         
         // Sayfa yüklendiğinde ayarları ve bildirimleri göster
         window.onload = function () {
             loadSettings();
             window.showNotification('Sistem güncellendi! Yeni özellikler için göz atın.', 'info');
-            loadNewsFeed(fictionalNewsData);
         }
     </script>
 </body>
