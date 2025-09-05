@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haber Ajansı</title>
+    <title>ITACHI HABER</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #1a202c; /* Koyu arka plan */
+            color: #f3f4f6; /* Açık metin */
         }
         .text-logo {
             font-family: 'Oswald', sans-serif;
@@ -37,11 +38,12 @@
     <nav class="bg-gray-900 text-white p-4 shadow-xl sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-6">
-                <span class="text-4xl font-bold text-red-500 text-logo">A HABER</span>
+                <span class="text-4xl font-bold text-red-500 text-logo">ITACHI HABER</span>
                 <button onclick="window.showView('home')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Anasayfa</button>
                 <button onclick="window.showView('aboutUs')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Hakkımızda</button>
                 <button onclick="window.showView('submitNews')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Haber Paylaş</button>
                 <button onclick="window.showView('publishers')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Yayıncılar</button>
+                <button onclick="window.showView('applyForPublisher')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Yayıncı Başvuru</button>
                 <button id="publisherDashboardBtn" onclick="window.showView('publisherDashboard')" class="hover:text-red-400 transition duration-300 transform hover:scale-105 hidden">Yayıncı Paneli</button>
             </div>
             <div class="flex items-center space-x-4">
@@ -66,94 +68,146 @@
         <div id="views" class="space-y-12">
 
             <!-- Anasayfa -->
-            <div id="home" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
-                <h1 class="text-4xl font-bold text-gray-900 mb-6">Son Dakika Haberleri</h1>
+            <div id="home" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h1 class="text-4xl font-bold text-gray-100 mb-6">Son Dakika Haberleri</h1>
                 <div id="newsFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Haberler buraya yüklenecek -->
                 </div>
             </div>
 
             <!-- Hakkımızda Bölümü -->
-            <div id="aboutUs" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
-                <h1 class="text-4xl font-bold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Hakkımızda</h1>
-                <div class="space-y-6 text-gray-700 leading-relaxed">
-                    <p>A Haber, güncel gelişmeleri en hızlı ve doğru şekilde okuyucularına ulaştırmayı hedefleyen modern bir haber ajansı simülasyonudur. Şeffaflık, tarafsızlık ve güvenilirlik ilkeleriyle yola çıkarak, toplumsal olaylara, teknolojiye, ekonomiye ve kültüre dair en önemli haberleri derliyoruz.</p>
+            <div id="aboutUs" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h1 class="text-4xl font-bold text-gray-100 mb-6 border-b-4 border-red-500 pb-2">Hakkımızda</h1>
+                <div class="space-y-6 text-gray-300 leading-relaxed">
+                    <p>ITACHI HABER, güncel gelişmeleri en hızlı ve doğru şekilde okuyucularına ulaştırmayı hedefleyen modern bir haber ajansı simülasyonudur. Şeffaflık, tarafsızlık ve güvenilirlik ilkeleriyle yola çıkarak, toplumsal olaylara, teknolojiye, ekonomiye ve kültüre dair en önemli haberleri derliyoruz.</p>
                     <p>Platformumuz, bağımsız gazetecilerin ve vatandaş muhabirlerinin sesini duyurmasına olanak tanır. Kullanıcılarımız, sisteme anonim olarak haber gönderimi yapabilir veya yayıncı statüsü alarak onaylanmış haberleri yayınlayabilir. Her haber, yayınlanmadan önce editör ekibimiz tarafından titizlikle incelenir ve teyit edilir.</p>
                     <p>Misyonumuz, bilgiye erişimi kolaylaştırmak ve herkesin doğru habere ulaşmasını sağlamaktır. Bu platform, yalnızca haber paylaşımını değil, aynı zamanda kullanıcılar arasında açık ve saygılı bir iletişim ortamını da teşvik etmektedir.</p>
-                    <p class="font-semibold text-gray-800">A Haber ekibi olarak, sizleri de aramızda görmekten mutluluk duyarız.</p>
+                    <p class="font-semibold text-gray-200">ITACHI HABER ekibi olarak, sizleri de aramızda görmekten mutluluk duyarız.</p>
                 </div>
             </div>
 
             <!-- Haber Paylaşma Alanı -->
-            <div id="submitNews" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-gray-900 mb-6">Haber Paylaşın</h2>
-                <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-4">
+            <div id="submitNews" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-100 mb-6">Haber Paylaşın</h2>
+                <div class="bg-red-900 border border-red-700 text-red-200 p-4 rounded-lg mb-4">
                     <p class="font-medium">Anonim olarak haber gönderiyorsunuz. Kimliğiniz gizlidir.</p>
                 </div>
                 <form id="newsForm" class="space-y-6">
                     <div>
-                        <label for="newsTitle" class="block text-gray-700 font-medium mb-2">Başlık (Opsiyonel)</label>
-                        <input type="text" id="newsTitle" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200">
+                        <label for="newsTitle" class="block text-gray-300 font-medium mb-2">Başlık (Opsiyonel)</label>
+                        <input type="text" id="newsTitle" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white">
                     </div>
                     <div>
-                        <label for="newsContent" class="block text-gray-700 font-medium mb-2">Haber İçeriği</label>
-                        <textarea id="newsContent" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-48 transition duration-200" required></textarea>
+                        <label for="newsContent" class="block text-gray-300 font-medium mb-2">Haber İçeriği</label>
+                        <textarea id="newsContent" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-48 transition duration-200 bg-gray-900 text-white" required></textarea>
                     </div>
                     <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Haberi Gönder</button>
                     <div id="newsMessage" class="mt-4 text-center font-medium"></div>
                 </form>
             </div>
             
+            <!-- Yayıncı Başvuru Alanı -->
+            <div id="applyForPublisher" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-100 mb-6">Yayıncı Olarak Başvuru</h2>
+                <p class="text-gray-300 mb-4">Lütfen aşağıdaki soruları yanıtlayarak yayıncı olma isteğinizi bize iletin.</p>
+                <form id="publisherApplicationForm" class="space-y-6">
+                    <div>
+                        <label for="q1" class="block text-gray-300 font-medium mb-2">1. Neden ITACHI HABER platformunda yayıncı olmak istiyorsunuz?</label>
+                        <textarea id="q1" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-24 bg-gray-900 text-white" required></textarea>
+                    </div>
+                    <div>
+                        <label for="q2" class="block text-gray-300 font-medium mb-2">2. Haber yazma veya medya alanında daha önce deneyiminiz oldu mu?</label>
+                        <textarea id="q2" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-24 bg-gray-900 text-white" required></textarea>
+                    </div>
+                    <div>
+                        <label for="q3" class="block text-gray-300 font-medium mb-2">3. Başvurduğunuz e-posta adresini doğrulayın.</label>
+                        <input type="email" id="q3" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-gray-900 text-white" required>
+                    </div>
+                    <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Başvuruyu Gönder</button>
+                    <div id="applicationMessage" class="mt-4 text-center font-medium"></div>
+                </form>
+            </div>
+            
             <!-- Yayıncılar Listesi -->
-            <div id="publishers" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Yayıncılarımız</h2>
-                <ul id="publishersList" class="list-disc list-inside space-y-3 text-gray-700">
+            <div id="publishers" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-100 mb-6 border-b-4 border-red-500 pb-2">Yayıncılarımız</h2>
+                <ul id="publishersList" class="list-disc list-inside space-y-3 text-gray-300">
                     <!-- Yayıncılar buraya yüklenecek -->
                 </ul>
             </div>
 
             <!-- Yayıncı Paneli -->
-            <div id="publisherDashboard" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Yayıncı Paneli</h2>
-                <div id="pendingNewsList" class="space-y-6">
-                    <p class="text-gray-500">Bekleyen haberler yükleniyor...</p>
+            <div id="publisherDashboard" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-100 mb-6 border-b-4 border-red-500 pb-2">Yayıncı Paneli</h2>
+                <div class="space-y-8">
+                    <!-- Bekleyen Haberler -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-100 mb-4">Bekleyen Haberler</h3>
+                        <div id="pendingNewsList" class="space-y-6">
+                            <p class="text-gray-500">Bekleyen haberler yükleniyor...</p>
+                        </div>
+                    </div>
+                    <!-- Yayıncı Başvuruları -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-100 mb-4">Yayıncı Başvuruları</h3>
+                        <div id="publisherApplicationsList" class="space-y-6">
+                            <p class="text-gray-500">Bekleyen başvuru bulunmuyor.</p>
+                        </div>
+                    </div>
+                    <!-- Yeni Yayıncı Oluştur -->
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-100 mb-4">Yeni Yayıncı Oluştur</h3>
+                        <p class="text-gray-400 mb-4">E-posta ve şifre ile yeni bir yayıncı hesabı oluşturun.</p>
+                        <form id="createPublisherForm" class="space-y-4">
+                            <div>
+                                <label for="newPublisherEmail" class="block text-gray-300 font-medium mb-2">Yeni Yayıncı E-postası</label>
+                                <input type="email" id="newPublisherEmail" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-gray-900 text-white" required>
+                            </div>
+                            <div>
+                                <label for="newPublisherPassword" class="block text-gray-300 font-medium mb-2">Yeni Yayıncı Şifresi</label>
+                                <input type="password" id="newPublisherPassword" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-gray-900 text-white" required>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-full hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg">Yayıncı Oluştur</button>
+                            <div id="createPublisherMessage" class="mt-4 text-center font-medium"></div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
             <!-- Sohbet Alanı -->
-            <div id="chat" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Canlı Sohbet</h2>
-                <div id="chatBox" class="bg-gray-100 h-96 p-4 rounded-lg overflow-y-auto mb-4 border border-gray-300 flex flex-col-reverse">
+            <div id="chat" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-100 mb-6 border-b-4 border-red-500 pb-2">Canlı Sohbet</h2>
+                <div id="chatBox" class="bg-gray-900 h-96 p-4 rounded-lg overflow-y-auto mb-4 border border-gray-700 flex flex-col-reverse">
                     <!-- Sohbet mesajları buraya gelecek -->
                 </div>
                 <form id="chatForm" class="flex space-x-4">
-                    <input type="text" id="chatMessageInput" class="flex-grow p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" placeholder="Bir mesaj yazın..." required>
+                    <input type="text" id="chatMessageInput" class="flex-grow p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white" placeholder="Bir mesaj yazın..." required>
                     <button type="submit" class="bg-green-600 text-white font-bold py-4 px-8 rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 shadow-lg">Gönder</button>
                 </form>
             </div>
 
             <!-- Ayarlar Menüsü -->
-            <div id="settings" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Hesap Ayarları</h2>
+            <div id="settings" class="view p-8 bg-gray-800 rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-100 mb-6 border-b-4 border-red-500 pb-2">Hesap Ayarları</h2>
                 <div id="settingsMessage" class="mt-4 text-center font-medium"></div>
 
                 <div class="space-y-8">
                     <!-- E-posta Güncelleme Formu -->
                     <form id="updateEmailForm" class="space-y-4">
-                        <h3 class="text-xl font-semibold text-gray-800">E-posta Adresini Güncelle</h3>
+                        <h3 class="text-xl font-semibold text-gray-100">E-posta Adresini Güncelle</h3>
                         <div>
-                            <label for="newEmail" class="block text-gray-700 font-medium mb-2">Yeni E-posta</label>
-                            <input type="email" id="newEmail" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                            <label for="newEmail" class="block text-gray-300 font-medium mb-2">Yeni E-posta</label>
+                            <input type="email" id="newEmail" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white" required>
                         </div>
                         <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">E-postayı Güncelle</button>
                     </form>
 
                     <!-- Şifre Güncelleme Formu -->
                     <form id="updatePasswordForm" class="space-y-4">
-                        <h3 class="text-xl font-semibold text-gray-800">Şifreyi Güncelle</h3>
+                        <h3 class="text-xl font-semibold text-gray-100">Şifreyi Güncelle</h3>
                         <div>
-                            <label for="newPassword" class="block text-gray-700 font-medium mb-2">Yeni Şifre</label>
-                            <input type="password" id="newPassword" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                            <label for="newPassword" class="block text-gray-300 font-medium mb-2">Yeni Şifre</label>
+                            <input type="password" id="newPassword" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white" required>
                         </div>
                         <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Şifreyi Güncelle</button>
                     </form>
@@ -163,37 +217,34 @@
 
         <!-- Auth Modal -->
         <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[99]">
-            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 id="authModalTitle" class="text-3xl font-bold text-gray-900"></h2>
-                    <button onclick="window.closeAuthModal()" class="text-gray-500 hover:text-gray-900 transition duration-300 transform hover:scale-110">&times;</button>
+                    <h2 id="authModalTitle" class="text-3xl font-bold text-gray-100"></h2>
+                    <button onclick="window.closeAuthModal()" class="text-gray-400 hover:text-gray-100 transition duration-300 transform hover:scale-110">&times;</button>
                 </div>
                 <form id="authForm" class="space-y-6">
                     <div>
-                        <label for="authEmail" class="block text-gray-700 font-medium mb-2">E-posta</label>
-                        <input type="email" id="authEmail" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                        <label for="authEmail" class="block text-gray-300 font-medium mb-2">E-posta</label>
+                        <input type="email" id="authEmail" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white" required>
                     </div>
                     <div>
-                        <label for="authPassword" class="block text-gray-700 font-medium mb-2">Şifre</label>
-                        <input type="password" id="authPassword" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                        <label for="authPassword" class="block text-gray-300 font-medium mb-2">Şifre</label>
+                        <input type="password" id="authPassword" class="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white" required>
                     </div>
                     <button type="submit" id="authSubmitBtn" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg"></button>
                     <div id="authMessage" class="mt-4 text-center font-medium"></div>
                 </form>
-                <div class="mt-6 text-center">
-                    <button onclick="window.handleAnonymousLogin()" class="text-blue-600 hover:underline">Anonim olarak devam et</button>
-                </div>
             </div>
         </div>
 
         <!-- Message Box -->
         <div id="messageBox" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[100]">
-            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm">
+            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-sm">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 id="messageBoxTitle" class="text-3xl font-bold text-gray-900"></h2>
-                    <button onclick="window.closeMessageBox()" class="text-gray-500 hover:text-gray-900 transition duration-300 transform hover:scale-110">&times;</button>
+                    <h2 id="messageBoxTitle" class="text-3xl font-bold text-gray-100"></h2>
+                    <button onclick="window.closeMessageBox()" class="text-gray-400 hover:text-gray-100 transition duration-300 transform hover:scale-110">&times;</button>
                 </div>
-                <p id="messageBoxContent" class="text-gray-700 mb-6"></p>
+                <p id="messageBoxContent" class="text-gray-300 mb-6"></p>
                 <button onclick="window.closeMessageBox()" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Tamam</button>
             </div>
         </div>
@@ -201,15 +252,15 @@
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-400 text-center p-6 mt-8">
-        <p>&copy; 2024 A Haber. Tüm Hakları Saklıdır.</p>
+        <p>&copy; 2024 ITACHI HABER. Tüm Hakları Saklıdır.</p>
     </footer>
 
     <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateEmail, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateEmail, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+        
         // Firebase yapılandırma bilgileri
         const firebaseConfig = {
             apiKey: "AIzaSyD-nr4EJnAmyurBGMJ7JQzqdC4kYaVHoTI",
@@ -256,6 +307,11 @@
         const messageBoxTitle = document.getElementById('messageBoxTitle');
         const messageBoxContent = document.getElementById('messageBoxContent');
         const newsFeed = document.getElementById('newsFeed');
+        const publisherApplicationForm = document.getElementById('publisherApplicationForm');
+        const applicationMessage = document.getElementById('applicationMessage');
+        const publisherApplicationsList = document.getElementById('publisherApplicationsList');
+        const createPublisherForm = document.getElementById('createPublisherForm');
+        const createPublisherMessage = document.getElementById('createPublisherMessage');
 
         // Firestore collection references
         const newsCollection = collection(db, `artifacts/${appId}/public/data/news`);
@@ -334,16 +390,6 @@
             }
         };
 
-        window.handleAnonymousLogin = async () => {
-            try {
-                await signInAnonymously(auth);
-                window.closeAuthModal();
-            } catch (error) {
-                console.error("Anonymous login error:", error);
-                window.showMessageBox("Hata", "Anonim oturum açılırken bir hata oluştu.");
-            }
-        };
-
         window.logout = async () => {
             try {
                 await signOut(auth);
@@ -352,10 +398,11 @@
             }
         };
 
+        // Oturum durumundaki değişiklikleri dinler
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserId = user.uid;
-                userEmailDisplay.textContent = user.email || 'Anonim Kullanıcı';
+                userEmailDisplay.textContent = user.email || user.uid;
                 authButtons.classList.add('hidden');
                 userProfile.classList.remove('hidden');
 
@@ -363,34 +410,27 @@
                 const publisherDoc = await getDoc(publisherDocRef);
                 isPublisher = publisherDoc.exists();
 
-                if (isPublisher || user.email === 'baranss283@gmail.com') { // For demo purposes, this user is also a publisher
+                if (isPublisher || user.email === 'baranss283@gmail.com') {
                     publisherDashboardBtn.classList.remove('hidden');
+                    loadPendingNews();
+                    loadPublisherApplications();
                 } else {
                     publisherDashboardBtn.classList.add('hidden');
                 }
 
                 console.log("User ID: " + currentUserId);
-                isAuthReady = true;
-                
-                // Load data after auth is ready
-                loadNewsFeed();
-                loadChatMessages();
-                loadPublishers();
-                if(isPublisher || user.email === 'baranss283@gmail.com') {
-                    loadPendingNews();
-                }
-                
-                window.showView('home');
             } else {
                 currentUserId = null;
-                isAuthReady = false;
+                isPublisher = false;
                 publisherDashboardBtn.classList.add('hidden');
                 authButtons.classList.remove('hidden');
                 userProfile.classList.add('hidden');
-                isPublisher = false;
-                console.log("No user session. Showing login screen.");
-                window.showAuthModal('login');
+                authButtons.classList.remove('hidden');
             }
+            isAuthReady = true;
+            loadNewsFeed();
+            loadChatMessages();
+            loadPublishers();
         });
 
         // --- Data Interaction Functions ---
@@ -421,9 +461,39 @@
             }
         });
 
+        publisherApplicationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAuthReady || !auth.currentUser) {
+                window.showMessageBox("Hata", "Yayıncı başvurusu yapmak için giriş yapmalısınız.");
+                return;
+            }
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+
+            try {
+                await addDoc(publisherApplicationsCollection, {
+                    userId: auth.currentUser.uid,
+                    email: auth.currentUser.email,
+                    question1: q1,
+                    question2: q2,
+                    question3: q3,
+                    status: 'pending',
+                    appliedAt: new Date()
+                });
+                applicationMessage.textContent = 'Başvurunuz başarıyla gönderildi!';
+                applicationMessage.classList.add('text-green-600');
+                publisherApplicationForm.reset();
+            } catch (error) {
+                console.error("Publisher application error:", error);
+                applicationMessage.textContent = 'Başvuru gönderilirken bir hata oluştu.';
+                applicationMessage.classList.add('text-red-600');
+            }
+        });
+        
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!isAuthReady) {
+            if (!isAuthReady || !auth.currentUser) {
                 window.showMessageBox("Hata", "Mesaj göndermek için lütfen giriş yapın.");
                 return;
             }
@@ -477,6 +547,35 @@
             }
         });
 
+        createPublisherForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAuthReady || auth.currentUser.email !== 'baranss283@gmail.com') {
+                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için admin olmalısınız.");
+                return;
+            }
+            const newPublisherEmail = document.getElementById('newPublisherEmail').value;
+            const newPublisherPassword = document.getElementById('newPublisherPassword').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, newPublisherEmail, newPublisherPassword);
+                const newUserId = userCredential.user.uid;
+                
+                await setDoc(doc(db, `artifacts/${appId}/public/data/publishers/${newUserId}`), {
+                    email: newPublisherEmail,
+                    appliedAt: new Date(),
+                    status: 'approved'
+                });
+                
+                createPublisherMessage.textContent = 'Yeni yayıncı başarıyla oluşturuldu!';
+                createPublisherMessage.classList.add('text-green-600');
+                createPublisherForm.reset();
+            } catch (error) {
+                createPublisherMessage.textContent = 'Yayıncı oluşturulurken bir hata oluştu: ' + error.message;
+                createPublisherMessage.classList.add('text-red-600');
+                console.error("Create publisher error:", error);
+            }
+        });
+
         // --- Real-time Listeners ---
         function loadNewsFeed() {
             if (!isAuthReady) return;
@@ -488,11 +587,11 @@
                     snapshot.forEach(doc => {
                         const newsData = doc.data();
                         const newsItem = document.createElement('div');
-                        newsItem.classList.add('card', 'bg-gray-100', 'p-6', 'rounded-xl', 'shadow-md');
+                        newsItem.classList.add('card', 'bg-gray-700', 'p-6', 'rounded-xl', 'shadow-md');
                         newsItem.innerHTML = `
-                            <h3 class="text-xl font-bold text-gray-800">${newsData.title || 'Başlıksız Haber'}</h3>
-                            <p class="text-gray-600 mt-2">${newsData.content}</p>
-                            <p class="text-sm text-gray-400 mt-4">Yayınlanma Tarihi: ${newsData.createdAt?.toDate().toLocaleDateString() || 'Bilinmiyor'}</p>
+                            <h3 class="text-xl font-bold text-gray-100">${newsData.title || 'Başlıksız Haber'}</h3>
+                            <p class="text-gray-300 mt-2">${newsData.content}</p>
+                            <p class="text-sm text-gray-500 mt-4">Yayınlanma Tarihi: ${newsData.createdAt?.toDate().toLocaleDateString() || 'Bilinmiyor'}</p>
                         `;
                         newsFeed.appendChild(newsItem);
                     });
@@ -510,10 +609,10 @@
                     snapshot.forEach(doc => {
                         const newsData = doc.data();
                         const newsItem = document.createElement('div');
-                        newsItem.classList.add('card', 'bg-gray-100', 'p-4', 'rounded-lg', 'border', 'border-gray-300');
+                        newsItem.classList.add('card', 'bg-gray-700', 'p-4', 'rounded-lg', 'border', 'border-gray-600');
                         newsItem.innerHTML = `
-                            <h3 class="text-xl font-semibold">${newsData.title || 'Başlıksız'}</h3>
-                            <p class="text-gray-700 mt-2">${newsData.content}</p>
+                            <h3 class="text-xl font-semibold text-gray-100">${newsData.title || 'Başlıksız'}</h3>
+                            <p class="text-gray-300 mt-2">${newsData.content}</p>
                             <div class="mt-4 space-x-2">
                                 <button onclick="window.approveNews('${doc.id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105">Onayla</button>
                                 <button onclick="window.deleteNews('${doc.id}')" class="bg-gray-600 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition duration-300 transform hover:scale-105">Sil</button>
@@ -535,13 +634,41 @@
                     snapshot.forEach(doc => {
                         const publisher = doc.data();
                         const publisherItem = document.createElement('li');
-                        publisherItem.classList.add('text-lg', 'font-medium', 'text-gray-800');
+                        publisherItem.classList.add('text-lg', 'font-medium', 'text-gray-200');
                         publisherItem.textContent = publisher.email;
                         publishersList.appendChild(publisherItem);
                     });
                 }
             });
         }
+        
+        function loadPublisherApplications() {
+             if (!isAuthReady || auth.currentUser.email !== 'baranss283@gmail.com') return;
+            
+            onSnapshot(query(publisherApplicationsCollection, where('status', '==', 'pending')), (snapshot) => {
+                publisherApplicationsList.innerHTML = '';
+                if (snapshot.empty) {
+                    publisherApplicationsList.innerHTML = '<p class="text-gray-500">Bekleyen başvuru bulunmuyor.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const application = doc.data();
+                        const appItem = document.createElement('div');
+                        appItem.classList.add('card', 'bg-gray-700', 'p-4', 'rounded-lg', 'border', 'border-gray-600');
+                        appItem.innerHTML = `
+                            <p class="text-lg font-semibold text-gray-100">Başvuran: ${application.email}</p>
+                            <p class="text-gray-300 mt-2">Soru 1: ${application.question1}</p>
+                            <p class="text-gray-300 mt-2">Soru 2: ${application.question2}</p>
+                            <div class="mt-4 space-x-2">
+                                <button onclick="window.approvePublisherApplication('${doc.id}', '${application.userId}', '${application.email}')" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition duration-300">Onayla</button>
+                                <button onclick="window.rejectPublisherApplication('${doc.id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300">Reddet</button>
+                            </div>
+                        `;
+                        publisherApplicationsList.appendChild(appItem);
+                    });
+                }
+            });
+        }
+
 
         function loadChatMessages() {
             if (!isAuthReady) return;
@@ -553,9 +680,12 @@
                 messages.forEach(messageData => {
                     const messageElement = document.createElement('div');
                     const isCurrentUser = messageData.userId === currentUserId;
-                    messageElement.classList.add('my-2', 'p-3', 'rounded-lg', 'max-w-xs', 'break-words', 'shadow-md', 'transition-all', 'duration-300', isCurrentUser ? 'self-end bg-blue-600 text-white' : 'self-start bg-gray-300 text-gray-800');
+                    
+                    const classesToAdd = (isCurrentUser ? 'self-end bg-blue-600 text-white' : 'self-start bg-gray-300 text-gray-800').split(' ');
+                    messageElement.classList.add('my-2', 'p-3', 'rounded-lg', 'max-w-xs', 'break-words', 'shadow-md', 'transition-all', 'duration-300', ...classesToAdd);
+                    
                     messageElement.innerHTML = `
-                        <p class="text-xs text-gray-200 mb-1">${isCurrentUser ? 'Siz' : 'Kullanıcı ' + messageData.userId.substring(0, 8)}</p>
+                        <p class="text-xs text-gray-200 mb-1">${isCurrentUser ? 'Siz' : 'Kullanıcı ' + messageData.userId}</p>
                         <p>${messageData.message}</p>
                     `;
                     chatBox.appendChild(messageElement);
@@ -566,28 +696,76 @@
         
         // --- Publisher Actions ---
         window.approveNews = async (docId) => {
-            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) return;
+            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) {
+                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için yetkili bir yayıncı olmalısınız.");
+                return;
+            }
             const newsRef = doc(db, `artifacts/${appId}/public/data/news/${docId}`);
             try {
                 await updateDoc(newsRef, {
                     status: 'approved'
                 });
-                console.log("Haber onaylandı:", docId);
+                window.showMessageBox("Başarılı", "Haber onaylandı.");
             } catch (error) {
                 console.error("Haber onaylama hatası:", error);
+                window.showMessageBox("Hata", "Haber onaylanırken bir sorun oluştu.");
             }
         };
 
         window.deleteNews = async (docId) => {
-            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) return;
+            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) {
+                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için yetkili bir yayıncı olmalısınız.");
+                return;
+            }
             const newsRef = doc(db, `artifacts/${appId}/public/data/news/${docId}`);
             try {
                 await deleteDoc(newsRef);
-                console.log("Haber silindi:", docId);
+                window.showMessageBox("Başarılı", "Haber silindi.");
             } catch (error) {
                 console.error("Haber silme hatası:", error);
+                window.showMessageBox("Hata", "Haber silinirken bir sorun oluştu.");
             }
         };
+
+        window.approvePublisherApplication = async (docId, userId, email) => {
+            if (!isAuthReady || auth.currentUser.email !== 'baranss283@gmail.com') {
+                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için admin olmalısınız.");
+                return;
+            }
+            try {
+                await setDoc(doc(db, `artifacts/${appId}/public/data/publishers/${userId}`), {
+                    email: email,
+                    appliedAt: new Date(),
+                    status: 'approved'
+                });
+                await updateDoc(doc(db, `artifacts/${appId}/public/data/publisherApplications/${docId}`), {
+                    status: 'approved'
+                });
+                window.showMessageBox("Başarılı", `${email} kullanıcısı artık bir yayıncı.`);
+            } catch (error) {
+                console.error("Başvuru onaylama hatası:", error);
+                window.showMessageBox("Hata", "Başvuru onaylanırken bir hata oluştu.");
+            }
+        };
+
+        window.rejectPublisherApplication = async (docId) => {
+             if (!isAuthReady || auth.currentUser.email !== 'baranss283@gmail.com') {
+                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için admin olmalısınız.");
+                return;
+            }
+            try {
+                 await updateDoc(doc(db, `artifacts/${appId}/public/data/publisherApplications/${docId}`), {
+                    status: 'rejected'
+                });
+                window.showMessageBox("Başarılı", "Başvuru reddedildi.");
+            } catch (error) {
+                console.error("Başvuru reddetme hatası:", error);
+                window.showMessageBox("Hata", "Başvuru reddedilirken bir hata oluştu.");
+            }
+        };
+        
+        // İlk görünümü ayarla
+        window.showView('home');
     </script>
 </body>
 </html>
