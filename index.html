@@ -1,866 +1,593 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>itachi studio</title>
+    <title>Haber Ajansı</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
-            color: #333;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        body.dark-mode {
-            background-color: #1a202c;
-            color: #e2e8f0;
+        .text-logo {
+            font-family: 'Oswald', sans-serif;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .view {
+            animation: fadeIn 0.5s ease-in-out;
         }
-        .main-content {
-            padding: 2rem 1rem;
-            transition: margin-left 0.3s ease;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .modal-content.dark-mode {
-            background-color: #2d3748;
-            color: #e2e8f0;
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
-        .tab-button.active {
-            background-color: #3b82f6;
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5), 0 2px 4px -1px rgba(59, 130, 246, 0.25);
-        }
-        .tab-button:hover:not(.active) {
-            transform: scale(1.05);
-            background-color: #f9fafb;
-            color: #1f2937;
-        }
-        .tab-button.dark-mode {
-            background-color: #4a5568;
-            color: white;
-        }
-        .tab-button.dark-mode:hover:not(.active) {
-            background-color: #6a717e;
-            color: white;
-        }
-        .nav-link {
-            transition: all 0.3s ease;
-            transform: scale(1);
-        }
-        .nav-link:hover {
-            transform: scale(1.05);
-            background-color: #3b82f6;
-            color: white;
-        }
-        .mobile-menu {
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        .mobile-menu.open {
-            transform: translateX(0);
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-        .close-button {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #9ca3af;
-        }
-        .close-button:hover {
-            color: #4b5563;
-        }
-        .assistant-chat {
-            background-color: #e5e7eb;
-            border-radius: 1rem;
-            padding: 1rem;
-            height: 300px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .chat-message {
-            background-color: #d1d5db;
-            padding: 0.5rem 1rem;
-            border-radius: 1rem;
-            max-width: 80%;
-            align-self: flex-start;
-            margin-bottom: 0.5rem;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="flex flex-col min-h-screen">
 
-    <!-- Masaüstü ve Tablet için Üst Menü -->
-    <header class="bg-white shadow-md p-4 sticky top-0 z-50 hidden md:block">
-        <div class="container flex justify-between items-center">
-            <div class="text-xl font-bold text-blue-600">itachi studio</div>
-            <nav class="flex space-x-4">
-                <a href="#applicationForm" class="nav-link px-4 py-2 rounded-full font-medium text-gray-700 hover:bg-blue-600 hover:text-white">Başvuru</a>
-                <a href="#" id="accountBtn" class="nav-link px-4 py-2 rounded-full font-medium text-gray-700 hover:bg-blue-600 hover:text-white">Hesap Yönetimi</a>
-                <a href="#adminPanel" class="nav-link px-4 py-2 rounded-full font-medium text-gray-700 hover:bg-blue-600 hover:text-white">Yönetici</a>
-                <a href="#" id="creditsBtn" class="nav-link px-4 py-2 rounded-full font-medium text-gray-700 hover:bg-blue-600 hover:text-white">Emeği Geçenler</a>
-                <a href="#" id="settingsBtn" class="nav-link px-4 py-2 rounded-full font-medium text-gray-700 hover:bg-blue-600 hover:text-white">Ayarlar</a>
-                <a href="#" id="assistantBtn" class="nav-link px-4 py-2 rounded-full font-medium text-gray-700 hover:bg-blue-600 hover:text-white">Asistan</a>
-            </nav>
-        </div>
-    </header>
-    
-    <!-- Mobil için Üst Menü ve Buton -->
-    <header class="bg-white shadow-md p-4 sticky top-0 z-50 md:hidden flex justify-between items-center">
-        <div class="text-xl font-bold text-blue-600">itachi studio</div>
-        <button id="mobileMenuBtn" class="p-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
-    </header>
-
-    <!-- Mobil Menü Çekmecesi -->
-    <div id="mobileMenu" class="mobile-menu fixed top-0 left-0 w-64 h-full bg-gray-800 text-white p-4 z-50 overflow-y-auto md:hidden">
-        <div class="flex justify-end mb-4">
-            <button id="closeMenuBtn" class="text-gray-400 hover:text-white p-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-        <nav class="flex flex-col space-y-2">
-            <a href="#applicationForm" class="nav-link block p-2 rounded-md font-medium text-white hover:bg-blue-600">Başvuru</a>
-            <a href="#" id="accountBtnMobile" class="nav-link block p-2 rounded-md font-medium text-white hover:bg-blue-600">Hesap Yönetimi</a>
-            <a href="#adminPanel" class="nav-link block p-2 rounded-md font-medium text-white hover:bg-blue-600">Yönetici</a>
-            <a href="#" id="creditsBtnMobile" class="nav-link block p-2 rounded-md font-medium text-white hover:bg-blue-600">Emeği Geçenler</a>
-            <a href="#" id="settingsBtnMobile" class="nav-link block p-2 rounded-md font-medium text-white hover:bg-blue-600">Ayarlar</a>
-            <a href="#" id="assistantBtnMobile" class="nav-link block p-2 rounded-md font-medium text-white hover:bg-blue-600">Asistan</a>
-        </nav>
-    </div>
-
-    <div class="main-content flex-grow">
-        <div class="container">
-            <!-- Ana İçerik Alanı -->
-            <main class="space-y-12">
-                <!-- Başvuru Formu -->
-                <section id="applicationForm" class="bg-white p-8 rounded-lg shadow-lg">
-                    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Polislik Başvuru Formu</h2>
-                    <p class="text-center text-gray-600 mb-8">Lütfen bilgilerinizi eksiksiz ve doğru bir şekilde giriniz.</p>
-                    <form id="applicationFormInner" class="space-y-6">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Adınız</label>
-                            <input type="text" id="name" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
-                        </div>
-                        <div>
-                            <label for="surname" class="block text-sm font-medium text-gray-700">Soyadınız</label>
-                            <input type="text" id="surname" name="surname" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">E-posta Adresiniz</label>
-                            <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
-                        </div>
-                        <div>
-                            <label for="education" class="block text-sm font-medium text-gray-700">Eğitim Durumu</label>
-                            <select id="education" name="education" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border bg-white">
-                                <option value="">Lütfen Seçiniz</option>
-                                <option value="ilkokul">İlkokul</option>
-                                <option value="ortaokul">Ortaokul</option>
-                                <option value="lise">Lise</option>
-                                <option value="lisans">Lisans</option>
-                                <option value="yuksek-lisans">Yüksek Lisans</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Zorunlu Belgeler</label>
-                            <div class="mt-2 space-y-4">
-                                <div>
-                                    <label for="idPhoto" class="block text-sm font-medium text-gray-700 mb-1">Kimlik Fotokopisi</label>
-                                    <label class="file-input block">
-                                        <span id="idPhotoText" class="text-sm text-gray-500">Dosya seçmek için tıklayın veya sürükleyip bırakın.</span>
-                                        <input type="file" id="idPhoto" name="idPhoto" accept=".jpg,.jpeg,.png,.pdf" required>
-                                    </label>
-                                </div>
-                                <div>
-                                    <label for="resume" class="block text-sm font-medium text-gray-700 mb-1">Özgeçmiş (CV)</label>
-                                    <label class="file-input block">
-                                        <span id="resumeText" class="text-sm text-gray-500">Dosya seçmek için tıklayın veya sürükleyip bırakın.</span>
-                                        <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="applicantMessageBox" class="text-center rounded-md p-3" style="display: none;"></div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300 font-semibold">Başvuruyu Gönder</button>
-                    </form>
-                </section>
-
-                <!-- Yönetici Paneli -->
-                <section id="adminPanel" class="bg-white p-8 rounded-lg shadow-lg">
-                    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Yönetici Paneli</h2>
-                    <div id="adminLoginPanel" class="space-y-6">
-                        <form id="adminLoginForm">
-                            <label for="adminPassword" class="block text-sm font-medium text-gray-700">Şifre</label>
-                            <input type="password" id="adminPassword" name="adminPassword" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border">
-                            <div id="adminLoginMessageBox" class="text-center rounded-md p-3 mt-4" style="display: none;"></div>
-                            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300 font-semibold mt-4">Giriş Yap</button>
-                        </form>
-                    </div>
-                    <div id="applicationsList" class="space-y-4 mt-6" style="display: none;">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Gerçek Başvurular</h3>
-                        <!-- Başvurular buraya yüklenecek -->
-                    </div>
-                </section>
-                
-                <!-- Sınav Sayfası -->
-                <section id="examPanel" class="bg-white p-8 rounded-lg shadow-lg" style="display: none;">
-                    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Sınav Sayfası</h2>
-                    <form id="examForm" class="space-y-6">
-                        <div>
-                            <label for="question1" class="block text-sm font-medium text-gray-700">Soru 1: Bir polis memurunun en önemli görevi nedir? Neden?</label>
-                            <textarea id="question1" name="question1" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" rows="3"></textarea>
-                        </div>
-                        <div>
-                            <label for="question2" class="block text-sm font-medium text-gray-700">Soru 2: Yasal olmayan bir gösteriye şahit olursanız, ilk tepkiniz ne olurdu?</label>
-                            <textarea id="question2" name="question2" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" rows="3"></textarea>
-                        </div>
-                        <div>
-                            <label for="question3" class="block text-sm font-medium text-gray-700">Soru 3: Stresli ve tehlikeli bir durumda nasıl sakin kalabilirsiniz?</label>
-                            <textarea id="question3" name="question3" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" rows="3"></textarea>
-                        </div>
-                        <div>
-                            <label for="question4" class="block text-sm font-medium text-gray-700">Soru 4: Türkiye Cumhuriyeti Anayasası'na göre polisin temel yetkileri nelerdir?</label>
-                            <textarea id="question4" name="question4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" rows="3"></textarea>
-                        </div>
-                        <div>
-                            <label for="question5" class="block text-sm font-medium text-gray-700">Soru 5: Hukuk üstünlüğü ve insan haklarına olan inancınızı nasıl tanımlarsınız?</label>
-                            <textarea id="question5" name="question5" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border" rows="3"></textarea>
-                        </div>
-                        <div id="examMessageBox" class="text-center rounded-md p-3" style="display: none;"></div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300 font-semibold">Sınavı Tamamla</button>
-                    </form>
-                </section>
-            </main>
-        </div>
-    </div>
-    
-    <!-- Özel Modal -->
-    <div id="customModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <span id="closeModalBtn" class="close-button">&times;</span>
-            <div id="modalContentInner" class="text-gray-700"></div>
-            <div id="modalButtons" class="flex justify-center space-x-4 mt-4">
-                <button id="modalConfirmBtn" class="px-4 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300">Onayla</button>
-                <button id="modalCancelBtn" class="px-4 py-2 rounded-md font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-colors duration-300">İptal</button>
-                <button id="modalOkBtn" class="px-4 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300" style="display: none;">Tamam</button>
+    <!-- Navbar -->
+    <nav class="bg-gray-900 text-white p-4 shadow-xl sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <span class="text-4xl font-bold text-red-500 text-logo">A HABER</span>
+                <button onclick="window.showView('home')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Anasayfa</button>
+                <button onclick="window.showView('aboutUs')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Hakkımızda</button>
+                <button onclick="window.showView('submitNews')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Haber Paylaş</button>
+                <button onclick="window.showView('publishers')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Yayıncılar</button>
+                <button id="publisherDashboardBtn" onclick="window.showView('publisherDashboard')" class="hover:text-red-400 transition duration-300 transform hover:scale-105 hidden">Yayıncı Paneli</button>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="window.showView('chat')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Sohbet</button>
+                <button onclick="window.showView('settings')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Ayarlar</button>
+            </div>
+            <div id="authButtons" class="flex items-center space-x-2">
+                <button onclick="window.showAuthModal('login')" class="bg-red-600 text-white font-bold py-2 px-4 rounded-full hover:bg-red-700 transition duration-300">Giriş Yap</button>
+                <button onclick="window.showAuthModal('signup')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-full hover:bg-green-700 transition duration-300">Kayıt Ol</button>
+            </div>
+            <div id="userProfile" class="hidden flex items-center space-x-2">
+                <span id="userEmailDisplay" class="text-white font-medium"></span>
+                <button onclick="window.logout()" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-full hover:bg-gray-600 transition duration-300">Çıkış Yap</button>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Hesap Yönetimi Modalı -->
-    <div id="accountModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <span id="closeAccountModalBtn" class="close-button">&times;</span>
-            <h3 class="text-xl font-bold mb-4">Hesap Yönetimi</h3>
-            <p id="accountStatusText" class="mb-4 text-sm text-gray-500"></p>
-            
-            <!-- Giriş/Kayıt Formu -->
-            <form id="authForm" class="space-y-4">
-                <div>
-                    <input type="email" id="authEmail" placeholder="E-posta" class="w-full rounded-md border-gray-300 p-2 border">
+    <!-- Main Content -->
+    <main class="flex-grow p-8 container mx-auto">
+        
+        <!-- View Container -->
+        <div id="views" class="space-y-12">
+
+            <!-- Anasayfa -->
+            <div id="home" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
+                <h1 class="text-4xl font-bold text-gray-900 mb-6">Son Dakika Haberleri</h1>
+                <div id="newsFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Haberler buraya yüklenecek -->
                 </div>
-                <div>
-                    <input type="password" id="authPassword" placeholder="Şifre" class="w-full rounded-md border-gray-300 p-2 border">
+            </div>
+
+            <!-- Hakkımızda Bölümü -->
+            <div id="aboutUs" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
+                <h1 class="text-4xl font-bold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Hakkımızda</h1>
+                <div class="space-y-6 text-gray-700 leading-relaxed">
+                    <p>A Haber, güncel gelişmeleri en hızlı ve doğru şekilde okuyucularına ulaştırmayı hedefleyen modern bir haber ajansı simülasyonudur. Şeffaflık, tarafsızlık ve güvenilirlik ilkeleriyle yola çıkarak, toplumsal olaylara, teknolojiye, ekonomiye ve kültüre dair en önemli haberleri derliyoruz.</p>
+                    <p>Platformumuz, bağımsız gazetecilerin ve vatandaş muhabirlerinin sesini duyurmasına olanak tanır. Kullanıcılarımız, sisteme anonim olarak haber gönderimi yapabilir veya yayıncı statüsü alarak onaylanmış haberleri yayınlayabilir. Her haber, yayınlanmadan önce editör ekibimiz tarafından titizlikle incelenir ve teyit edilir.</p>
+                    <p>Misyonumuz, bilgiye erişimi kolaylaştırmak ve herkesin doğru habere ulaşmasını sağlamaktır. Bu platform, yalnızca haber paylaşımını değil, aynı zamanda kullanıcılar arasında açık ve saygılı bir iletişim ortamını da teşvik etmektedir.</p>
+                    <p class="font-semibold text-gray-800">A Haber ekibi olarak, sizleri de aramızda görmekten mutluluk duyarız.</p>
                 </div>
-                <div id="authMessageBox" class="text-center rounded-md p-3" style="display: none;"></div>
-                <button type="submit" id="authSubmitBtn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-semibold">Giriş Yap</button>
-                <button type="button" id="toggleAuthBtn" class="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md font-semibold mt-2">Hesabın yok mu? Kayıt Ol</button>
-            </form>
+            </div>
+
+            <!-- Haber Paylaşma Alanı -->
+            <div id="submitNews" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-900 mb-6">Haber Paylaşın</h2>
+                <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-4">
+                    <p class="font-medium">Anonim olarak haber gönderiyorsunuz. Kimliğiniz gizlidir.</p>
+                </div>
+                <form id="newsForm" class="space-y-6">
+                    <div>
+                        <label for="newsTitle" class="block text-gray-700 font-medium mb-2">Başlık (Opsiyonel)</label>
+                        <input type="text" id="newsTitle" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200">
+                    </div>
+                    <div>
+                        <label for="newsContent" class="block text-gray-700 font-medium mb-2">Haber İçeriği</label>
+                        <textarea id="newsContent" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-48 transition duration-200" required></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Haberi Gönder</button>
+                    <div id="newsMessage" class="mt-4 text-center font-medium"></div>
+                </form>
+            </div>
             
-            <div class="my-4 text-gray-500">— veya —</div>
-            
-            <!-- Google ile Giriş -->
-            <button id="googleSignInBtn" class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-md font-semibold flex items-center justify-center space-x-2">
-                <svg class="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37.5 24 37.5c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.5-6.5C36.9 4.3 30.7 1 24 1 12.5 1 3 10.5 3 22c0 11.5 9.5 21 21 21 11.5 0 19-8.3 19-20 0-1.3-.2-2.7-.4-4z" fill="#4285F4"/>
-                    <path d="M44.5 20h-20v8.5h11.8c-.8 5.6-5.3 9.8-11.8 9.8-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.5-6.5c-4.4-4.4-10.3-6.9-17.6-6.9-11.5 0-21 9.5-21 21s9.5 21 21 21c11.5 0 19-8.3 19-20 0-1.3-.2-2.7-.4-4z" fill="#34A853"/>
-                    <path d="M3.7 21.3c-.2.6-.4 1.2-.4 1.7 0 11.5 9.5 21 21 21s21-9.5 21-21h-8.5c0 7.2-5.8 13-13 13s-13-5.8-13-13 5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.5-6.5c-4.4-4.4-10.3-6.9-17.6-6.9-11.5 0-21 9.5-21 21z" fill="#FBBC05"/>
-                    <path d="M44.5 20h-20v8.5h11.8c-.8 5.6-5.3 9.8-11.8 9.8-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.5-6.5C36.9 4.3 30.7 1 24 1c-11.5 0-21 9.5-21 21s9.5 21 21 21c11.5 0 19-8.3 19-20 0-1.3-.2-2.7-.4-4z" fill="#EA4335"/>
-                </svg>
-                <span>Google ile Giriş Yap</span>
-            </button>
+            <!-- Yayıncılar Listesi -->
+            <div id="publishers" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Yayıncılarımız</h2>
+                <ul id="publishersList" class="list-disc list-inside space-y-3 text-gray-700">
+                    <!-- Yayıncılar buraya yüklenecek -->
+                </ul>
+            </div>
+
+            <!-- Yayıncı Paneli -->
+            <div id="publisherDashboard" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Yayıncı Paneli</h2>
+                <div id="pendingNewsList" class="space-y-6">
+                    <p class="text-gray-500">Bekleyen haberler yükleniyor...</p>
+                </div>
+            </div>
+
+            <!-- Sohbet Alanı -->
+            <div id="chat" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Canlı Sohbet</h2>
+                <div id="chatBox" class="bg-gray-100 h-96 p-4 rounded-lg overflow-y-auto mb-4 border border-gray-300 flex flex-col-reverse">
+                    <!-- Sohbet mesajları buraya gelecek -->
+                </div>
+                <form id="chatForm" class="flex space-x-4">
+                    <input type="text" id="chatMessageInput" class="flex-grow p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" placeholder="Bir mesaj yazın..." required>
+                    <button type="submit" class="bg-green-600 text-white font-bold py-4 px-8 rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 shadow-lg">Gönder</button>
+                </form>
+            </div>
+
+            <!-- Ayarlar Menüsü -->
+            <div id="settings" class="view p-8 bg-white rounded-2xl shadow-xl hidden">
+                <h2 class="text-3xl font-semibold text-gray-900 mb-6 border-b-4 border-red-500 pb-2">Hesap Ayarları</h2>
+                <div id="settingsMessage" class="mt-4 text-center font-medium"></div>
+
+                <div class="space-y-8">
+                    <!-- E-posta Güncelleme Formu -->
+                    <form id="updateEmailForm" class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-800">E-posta Adresini Güncelle</h3>
+                        <div>
+                            <label for="newEmail" class="block text-gray-700 font-medium mb-2">Yeni E-posta</label>
+                            <input type="email" id="newEmail" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                        </div>
+                        <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">E-postayı Güncelle</button>
+                    </form>
+
+                    <!-- Şifre Güncelleme Formu -->
+                    <form id="updatePasswordForm" class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Şifreyi Güncelle</h3>
+                        <div>
+                            <label for="newPassword" class="block text-gray-700 font-medium mb-2">Yeni Şifre</label>
+                            <input type="password" id="newPassword" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                        </div>
+                        <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Şifreyi Güncelle</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
 
+        <!-- Auth Modal -->
+        <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[99]">
+            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 id="authModalTitle" class="text-3xl font-bold text-gray-900"></h2>
+                    <button onclick="window.closeAuthModal()" class="text-gray-500 hover:text-gray-900 transition duration-300 transform hover:scale-110">&times;</button>
+                </div>
+                <form id="authForm" class="space-y-6">
+                    <div>
+                        <label for="authEmail" class="block text-gray-700 font-medium mb-2">E-posta</label>
+                        <input type="email" id="authEmail" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                    </div>
+                    <div>
+                        <label for="authPassword" class="block text-gray-700 font-medium mb-2">Şifre</label>
+                        <input type="password" id="authPassword" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200" required>
+                    </div>
+                    <button type="submit" id="authSubmitBtn" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg"></button>
+                    <div id="authMessage" class="mt-4 text-center font-medium"></div>
+                </form>
+                <div class="mt-6 text-center">
+                    <button onclick="window.handleAnonymousLogin()" class="text-blue-600 hover:underline">Anonim olarak devam et</button>
+                </div>
+            </div>
+        </div>
 
+        <!-- Message Box -->
+        <div id="messageBox" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[100]">
+            <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 id="messageBoxTitle" class="text-3xl font-bold text-gray-900"></h2>
+                    <button onclick="window.closeMessageBox()" class="text-gray-500 hover:text-gray-900 transition duration-300 transform hover:scale-110">&times;</button>
+                </div>
+                <p id="messageBoxContent" class="text-gray-700 mb-6"></p>
+                <button onclick="window.closeMessageBox()" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Tamam</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 text-center p-6 mt-8">
+        <p>&copy; 2024 A Haber. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <!-- Firebase Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, getDocs, onSnapshot, query, where, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateEmail, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase yapılandırma bilgileri
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-nr4EJnAmyurBGMJ7JQzqdC4kYaVHoTI",
+            authDomain: "esee-240a6.firebaseapp.com",
+            projectId: "esee-240a6",
+            storageBucket: "esee-240a6.firebasestorage.app",
+            messagingSenderId: "1016496897853",
+            appId: "1:1016496897853:web:631d976b5e7c2423194f54",
+            measurementId: "G-72ZLZ5B9BZ"
+        };
+        const appId = "1:1016496897853:web:631d976b5e7c2423194f54";
         
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let currentUserId = null;
+        let isPublisher = false;
+        let isAuthReady = false;
 
-        let app;
-        let auth;
-        let db;
-        let userId = null;
-
-        // Firestore ve Auth Referansları
-        let applicationsCollection;
-        let adminPasswordDocRef;
-
-        // DOM Elementleri
-        const applicantFormPanel = document.getElementById('applicationForm');
-        const adminPanel = document.getElementById('adminPanel');
-        const examPanel = document.getElementById('examPanel');
-        const applicationsList = document.getElementById('applicationsList');
-        const adminLoginForm = document.getElementById('adminLoginForm');
-        const adminLoginPanel = document.getElementById('adminLoginPanel');
-        const applicationFormInner = document.getElementById('applicationFormInner');
-        const applicantMessageBox = document.getElementById('applicantMessageBox');
-        const adminLoginMessageBox = document.getElementById('adminLoginMessageBox');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
-        const creditsBtn = document.getElementById('creditsBtn');
-        const settingsBtn = document.getElementById('settingsBtn');
-        const assistantBtn = document.getElementById('assistantBtn');
-        const accountBtn = document.getElementById('accountBtn');
-        const creditsBtnMobile = document.getElementById('creditsBtnMobile');
-        const settingsBtnMobile = document.getElementById('settingsBtnMobile');
-        const assistantBtnMobile = document.getElementById('assistantBtnMobile');
-        const accountBtnMobile = document.getElementById('accountBtnMobile');
-        const customModal = document.getElementById('customModal');
-        const modalContentInner = document.getElementById('modalContentInner');
-        const modalButtons = document.getElementById('modalButtons');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
-        const modalCancelBtn = document.getElementById('modalCancelBtn');
-        const modalOkBtn = document.getElementById('modalOkBtn');
-        
-        // Hesap Yönetimi Modalı Elementleri
-        const accountModal = document.getElementById('accountModal');
-        const closeAccountModalBtn = document.getElementById('closeAccountModalBtn');
-        const authForm = document.getElementById('authForm');
-        const authEmail = document.getElementById('authEmail');
-        const authPassword = document.getElementById('authPassword');
+        // UI elements
+        const views = document.querySelectorAll('.view');
+        const newsForm = document.getElementById('newsForm');
+        const newsMessage = document.getElementById('newsMessage');
+        const pendingNewsList = document.getElementById('pendingNewsList');
+        const chatForm = document.getElementById('chatForm');
+        const chatBox = document.getElementById('chatBox');
+        const chatMessageInput = document.getElementById('chatMessageInput');
+        const publisherDashboardBtn = document.getElementById('publisherDashboardBtn');
+        const authButtons = document.getElementById('authButtons');
+        const userProfile = document.getElementById('userProfile');
+        const userEmailDisplay = document.getElementById('userEmailDisplay');
+        const authModal = document.getElementById('authModal');
+        const authModalTitle = document.getElementById('authModalTitle');
         const authSubmitBtn = document.getElementById('authSubmitBtn');
-        const toggleAuthBtn = document.getElementById('toggleAuthBtn');
-        const googleSignInBtn = document.getElementById('googleSignInBtn');
-        const authMessageBox = document.getElementById('authMessageBox');
-        const accountStatusText = document.getElementById('accountStatusText');
+        const authEmailInput = document.getElementById('authEmail');
+        const authPasswordInput = document.getElementById('authPassword');
+        const authMessage = document.getElementById('authMessage');
+        const publishersList = document.getElementById('publishersList');
+        const updateEmailForm = document.getElementById('updateEmailForm');
+        const updatePasswordForm = document.getElementById('updatePasswordForm');
+        const settingsMessage = document.getElementById('settingsMessage');
+        const messageBox = document.getElementById('messageBox');
+        const messageBoxTitle = document.getElementById('messageBoxTitle');
+        const messageBoxContent = document.getElementById('messageBoxContent');
+        const newsFeed = document.getElementById('newsFeed');
 
-        let isLoginState = true;
-
-        // Modalı gösterme fonksiyonu
-        function showModal(content, type = 'alert') {
-            return new Promise(resolve => {
-                modalContentInner.innerHTML = content;
-                if (type === 'confirm') {
-                    modalButtons.style.display = 'flex';
-                    modalOkBtn.style.display = 'none';
-                    modalConfirmBtn.onclick = () => {
-                        customModal.classList.add('hidden');
-                        resolve(true);
-                    };
-                    modalCancelBtn.onclick = () => {
-                        customModal.classList.add('hidden');
-                        resolve(false);
-                    };
-                } else {
-                    modalButtons.style.display = 'none';
-                    modalOkBtn.style.display = 'block';
-                    modalOkBtn.onclick = () => {
-                        customModal.classList.add('hidden');
-                        resolve();
-                    };
-                }
-                customModal.classList.remove('hidden');
-            });
-        }
-        closeModalBtn.addEventListener('click', () => customModal.classList.add('hidden'));
-
-        // Hesap Yönetimi Modalını göster/gizle
-        function showAccountModal() {
-            accountModal.classList.remove('hidden');
-        }
-        function hideAccountModal() {
-            accountModal.classList.add('hidden');
-        }
-        closeAccountModalBtn.addEventListener('click', hideAccountModal);
+        // Firestore collection references
+        const newsCollection = collection(db, `artifacts/${appId}/public/data/news`);
+        const chatCollection = collection(db, `artifacts/${appId}/public/data/chat`);
+        const publishersCollection = collection(db, `artifacts/${appId}/public/data/publishers`);
+        const publisherApplicationsCollection = collection(db, `artifacts/${appId}/public/data/publisherApplications`);
         
-        // Hesap Durumunu Güncelleme
-        function updateAccountStatus(user) {
-            if (user) {
-                accountStatusText.textContent = `Giriş Yapıldı: ${user.email || 'Anonim Kullanıcı'}`;
-                authForm.style.display = 'none';
-                googleSignInBtn.style.display = 'none';
-                toggleAuthBtn.textContent = 'Çıkış Yap';
-            } else {
-                accountStatusText.textContent = 'Giriş yapılmadı.';
-                authForm.style.display = 'block';
-                googleSignInBtn.style.display = 'flex';
-                toggleAuthBtn.textContent = 'Hesabın yok mu? Kayıt Ol';
+        // --- UI Functions ---
+        window.showView = (viewId) => {
+            if (!isAuthReady) return; 
+            views.forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+        };
+
+        window.showMessageBox = (title, message) => {
+            messageBoxTitle.textContent = title;
+            messageBoxContent.textContent = message;
+            messageBox.classList.remove('hidden');
+        };
+
+        window.closeMessageBox = () => {
+            messageBox.classList.add('hidden');
+        };
+
+        window.showAuthModal = (mode) => {
+            if (mode === 'login') {
+                authModalTitle.textContent = 'Giriş Yap';
+                authSubmitBtn.textContent = 'Giriş Yap';
+                authForm.onsubmit = window.handleLogin;
+            } else if (mode === 'signup') {
+                authModalTitle.textContent = 'Kayıt Ol';
+                authSubmitBtn.textContent = 'Kayıt Ol';
+                authForm.onsubmit = window.handleSignup;
             }
-        }
+            authModal.classList.remove('hidden');
+            authMessage.textContent = '';
+            authForm.reset();
+        };
 
-        // Firebase'i başlatın ve kimlik doğrulama durumunu dinleyin
-        window.onload = async function() {
-            showPanel('application');
-            setupModalListeners();
+        window.closeAuthModal = () => {
+            authModal.classList.add('hidden');
+        };
 
+        // --- Auth Functions ---
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            const email = authEmailInput.value;
+            const password = authPasswordInput.value;
             try {
-                if (firebaseConfig.apiKey) {
-                    app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
-
-                    onAuthStateChanged(auth, async (user) => {
-                        if (user) {
-                            userId = user.uid;
-                            // Kullanıcıya özel koleksiyon referansı
-                            applicationsCollection = collection(db, 'artifacts', appId, 'users', userId, 'applications');
-                            // Genel kullanıma açık admin şifresi belge referansı
-                            adminPasswordDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'admin_settings', 'password');
-                            updateAccountStatus(user);
-                        } else {
-                            userId = null;
-                            applicationsCollection = null;
-                            adminPasswordDocRef = null;
-                            updateAccountStatus(null);
-                        }
-                    });
-
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } else {
-                    console.log("Firebase yapılandırma bilgileri eksik. Bazı işlevler çalışmayabilir.");
-                }
+                await signInWithEmailAndPassword(auth, email, password);
+                authMessage.textContent = 'Başarıyla giriş yapıldı!';
+                authMessage.classList.add('text-green-600');
+                window.closeAuthModal();
             } catch (error) {
-                console.error("Firebase başlatılırken bir hata oluştu:", error);
-            }
-
-            const savedTheme = localStorage.getItem('theme');
-            const savedFontSize = localStorage.getItem('fontSize');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
-            if (savedFontSize === 'small') {
-                document.body.style.fontSize = '14px';
-            } else if (savedFontSize === 'large') {
-                document.body.style.fontSize = '18px';
+                console.error("Login Error:", error);
+                authMessage.textContent = 'Giriş hatası: ' + error.message;
+                authMessage.classList.add('text-red-600');
             }
         };
 
-
-        // E-posta ve Şifre ile Giriş/Kayıt
-        authForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const email = authEmail.value;
-            const password = authPassword.value;
+        window.handleSignup = async (e) => {
+            e.preventDefault();
+            const email = authEmailInput.value;
+            const password = authPasswordInput.value;
             try {
-                if (isLoginState) {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    authMessageBox.textContent = 'Başarılı bir şekilde giriş yapıldı!';
-                    authMessageBox.className = 'text-center rounded-md p-3 bg-green-100 text-green-700';
-                    hideAccountModal();
+                await createUserWithEmailAndPassword(auth, email, password);
+                authMessage.textContent = 'Hesap başarıyla oluşturuldu!';
+                authMessage.classList.add('text-green-600');
+                window.closeAuthModal();
+            } catch (error) {
+                console.error("Signup Error:", error);
+                authMessage.textContent = 'Kayıt hatası: ' + error.message;
+                authMessage.classList.add('text-red-600');
+            }
+        };
+
+        window.handleAnonymousLogin = async () => {
+            try {
+                await signInAnonymously(auth);
+                window.closeAuthModal();
+            } catch (error) {
+                console.error("Anonymous login error:", error);
+                window.showMessageBox("Hata", "Anonim oturum açılırken bir hata oluştu.");
+            }
+        };
+
+        window.logout = async () => {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                userEmailDisplay.textContent = user.email || 'Anonim Kullanıcı';
+                authButtons.classList.add('hidden');
+                userProfile.classList.remove('hidden');
+
+                const publisherDocRef = doc(db, `artifacts/${appId}/public/data/publishers/${currentUserId}`);
+                const publisherDoc = await getDoc(publisherDocRef);
+                isPublisher = publisherDoc.exists();
+
+                if (isPublisher || user.email === 'baranss283@gmail.com') { // For demo purposes, this user is also a publisher
+                    publisherDashboardBtn.classList.remove('hidden');
                 } else {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    authMessageBox.textContent = 'Hesap başarıyla oluşturuldu!';
-                    authMessageBox.className = 'text-center rounded-md p-3 bg-green-100 text-green-700';
-                    hideAccountModal();
+                    publisherDashboardBtn.classList.add('hidden');
                 }
-            } catch (error) {
-                authMessageBox.textContent = `Hata: ${error.message}`;
-                authMessageBox.className = 'text-center rounded-md p-3 bg-red-100 text-red-700';
-            }
-            authMessageBox.style.display = 'block';
-        });
 
-        // Google ile Giriş
-        googleSignInBtn.addEventListener('click', async () => {
-            const provider = new GoogleAuthProvider();
-            try {
-                await signInWithPopup(auth, provider);
-                authMessageBox.textContent = 'Google ile başarılı bir şekilde giriş yapıldı!';
-                authMessageBox.className = 'text-center rounded-md p-3 bg-green-100 text-green-700';
-                hideAccountModal();
-            } catch (error) {
-                authMessageBox.textContent = `Hata: ${error.message}`;
-                authMessageBox.className = 'text-center rounded-md p-3 bg-red-100 text-red-700';
-            }
-            authMessageBox.style.display = 'block';
-        });
-
-        // Form görünümünü değiştir
-        toggleAuthBtn.addEventListener('click', () => {
-            if (auth.currentUser) {
-                auth.signOut();
-                return;
-            }
-            isLoginState = !isLoginState;
-            if (isLoginState) {
-                authSubmitBtn.textContent = 'Giriş Yap';
-                toggleAuthBtn.textContent = 'Hesabın yok mu? Kayıt Ol';
+                console.log("User ID: " + currentUserId);
+                isAuthReady = true;
+                
+                // Load data after auth is ready
+                loadNewsFeed();
+                loadChatMessages();
+                loadPublishers();
+                if(isPublisher || user.email === 'baranss283@gmail.com') {
+                    loadPendingNews();
+                }
+                
+                window.showView('home');
             } else {
-                authSubmitBtn.textContent = 'Kayıt Ol';
-                toggleAuthBtn.textContent = 'Zaten hesabın var mı? Giriş Yap';
+                currentUserId = null;
+                isAuthReady = false;
+                publisherDashboardBtn.classList.add('hidden');
+                authButtons.classList.remove('hidden');
+                userProfile.classList.add('hidden');
+                isPublisher = false;
+                console.log("No user session. Showing login screen.");
+                window.showAuthModal('login');
             }
-            authMessageBox.style.display = 'none';
         });
 
-        // Panel görünürlüğünü yönetme fonksiyonu
-        function showPanel(panel) {
-            applicantFormPanel.style.display = 'none';
-            adminPanel.style.display = 'none';
-            examPanel.style.display = 'none';
+        // --- Data Interaction Functions ---
+        newsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAuthReady) {
+                window.showMessageBox("Hata", "Lütfen giriş yapın veya anonim olarak devam edin.");
+                return;
+            }
+            const newsTitle = document.getElementById('newsTitle').value;
+            const newsContent = document.getElementById('newsContent').value;
             
-            if (panel === 'application') {
-                applicantFormPanel.style.display = 'block';
-            } else if (panel === 'admin') {
-                adminPanel.style.display = 'block';
-                renderAdminPanel();
-            } else if (panel === 'exam') {
-                examPanel.style.display = 'block';
-            }
-        }
-        
-        // Başvuru Formu Gönderimi
-        applicationFormInner.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            if (!userId) {
-                showModal('Lütfen başvuru yapmadan önce giriş yapın.', 'alert');
-                return;
-            }
-
-            const newApplication = {
-                name: document.getElementById('name').value,
-                surname: document.getElementById('surname').value,
-                email: document.getElementById('email').value,
-                education: document.getElementById('education').value,
-                status: 'pending',
-                timestamp: Date.now()
-            };
-
             try {
-                await addDoc(applicationsCollection, newApplication);
-
-                applicantMessageBox.style.display = 'block';
-                applicantMessageBox.className = 'text-center rounded-md p-3 bg-green-100 text-green-700';
-                applicantMessageBox.innerHTML = `<p class="font-bold">Başvurunuz başarıyla alındı!</p>`;
-                applicationFormInner.reset();
-                document.getElementById('idPhotoText').textContent = 'Dosya seçmek için tıklayın veya sürükleyip bırakın.';
-                document.getElementById('resumeText').textContent = 'Dosya seçmek için tıklayın veya sürükleyip bırakın.';
-            } catch (e) {
-                console.error("Başvuru eklenirken hata oluştu: ", e);
-                applicantMessageBox.style.display = 'block';
-                applicantMessageBox.className = 'text-center rounded-md p-3 bg-red-100 text-red-700';
-                applicantMessageBox.innerHTML = `<p class="font-bold">Bir hata oluştu. Lütfen tekrar deneyin.</p>`;
-            }
-        });
-
-        // Yönetici Giriş Olayı
-        adminLoginForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const password = document.getElementById('adminPassword').value;
-
-            try {
-                // Veritabanından admin şifresini al
-                const adminPasswordSnap = await getDoc(adminPasswordDocRef);
-                if (!adminPasswordSnap.exists()) {
-                    // Eğer admin şifresi veritabanında yoksa, bir tane oluştur
-                    const initialAdminPassword = "Allahukerim123";
-                    await setDoc(adminPasswordDocRef, { password: initialAdminPassword });
-                    console.log("Admin şifresi veritabanına kaydedildi.");
-                }
-
-                const storedPassword = adminPasswordSnap.data()?.password;
-
-                if (password === storedPassword) {
-                    adminLoginPanel.style.display = 'none';
-                    applicationsList.style.display = 'block';
-                    renderAdminPanel();
-                } else {
-                    adminLoginMessageBox.style.display = 'block';
-                    adminLoginMessageBox.className = 'text-center rounded-md p-3 bg-red-100 text-red-700';
-                    adminLoginMessageBox.textContent = 'Yanlış şifre. Lütfen tekrar deneyin.';
-                }
+                await addDoc(newsCollection, {
+                    title: newsTitle,
+                    content: newsContent,
+                    status: 'pending',
+                    createdAt: new Date(),
+                    reporterId: currentUserId
+                });
+                newsMessage.textContent = 'Haberiniz başarıyla gönderildi ve onay bekliyor.';
+                newsMessage.classList.add('text-green-600');
+                newsForm.reset();
             } catch (error) {
-                console.error("Admin girişi sırasında hata oluştu: ", error);
-                adminLoginMessageBox.style.display = 'block';
-                adminLoginMessageBox.className = 'text-center rounded-md p-3 bg-red-100 text-red-700';
-                adminLoginMessageBox.textContent = 'Bir hata oluştu, lütfen konsolu kontrol edin.';
+                console.error("News submission error:", error);
+                newsMessage.textContent = 'Haber gönderilirken bir hata oluştu.';
+                newsMessage.classList.add('text-red-600');
             }
         });
 
-        // Yönetici Paneli Render Fonksiyonu
-        function renderAdminPanel() {
-            if (!applicationsCollection) {
-                applicationsList.innerHTML = `<p class="text-center text-gray-500">Kullanıcı verilerine erişilemiyor. Lütfen giriş yapın.</p>`;
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAuthReady) {
+                window.showMessageBox("Hata", "Mesaj göndermek için lütfen giriş yapın.");
                 return;
             }
+            const message = chatMessageInput.value;
+            if (!message) return;
+            try {
+                await addDoc(chatCollection, {
+                    message,
+                    userId: currentUserId,
+                    createdAt: new Date()
+                });
+                chatMessageInput.value = '';
+            } catch (error) {
+                console.error("Chat message error:", error);
+            }
+        });
 
-            const q = query(applicationsCollection);
-            onSnapshot(q, (snapshot) => {
-                applicationsList.innerHTML = '';
+        updateEmailForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAuthReady || !auth.currentUser) {
+                window.showMessageBox("Hata", "E-posta güncellemek için giriş yapmalısınız.");
+                return;
+            }
+            const newEmail = document.getElementById('newEmail').value;
+            try {
+                await updateEmail(auth.currentUser, newEmail);
+                settingsMessage.textContent = 'E-posta başarıyla güncellendi.';
+                settingsMessage.classList.add('text-green-600');
+            } catch (error) {
+                settingsMessage.textContent = 'E-posta güncelleme hatası: ' + error.message;
+                settingsMessage.classList.add('text-red-600');
+                console.error("Email update error:", error);
+            }
+        });
+
+        updatePasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAuthReady || !auth.currentUser) {
+                window.showMessageBox("Hata", "Şifre güncellemek için giriş yapmalısınız.");
+                return;
+            }
+            const newPassword = document.getElementById('newPassword').value;
+            try {
+                await updatePassword(auth.currentUser, newPassword);
+                settingsMessage.textContent = 'Şifre başarıyla güncellendi.';
+                settingsMessage.classList.add('text-green-600');
+            } catch (error) {
+                settingsMessage.textContent = 'Şifre güncelleme hatası: ' + error.message;
+                settingsMessage.classList.add('text-red-600');
+                console.error("Password update error:", error);
+            }
+        });
+
+        // --- Real-time Listeners ---
+        function loadNewsFeed() {
+            if (!isAuthReady) return;
+            onSnapshot(query(newsCollection, where('status', '==', 'approved')), (snapshot) => {
+                newsFeed.innerHTML = '';
                 if (snapshot.empty) {
-                    applicationsList.innerHTML = `<p class="text-center text-gray-500">Henüz gerçek başvuru yok.</p>`;
+                    newsFeed.innerHTML = '<p class="text-gray-500">Henüz yayınlanmış haber bulunmuyor.</p>';
                 } else {
-                    snapshot.forEach(async (doc) => {
-                        const app = doc.data();
-                        const statusColor = app.status === 'accepted' ? 'bg-green-100 text-green-700' :
-                                            app.status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700';
-                        const buttonText = app.status === 'pending' ? 'Değerlendir' :
-                                            app.status === 'accepted' ? 'Sınav Başlatıldı' :
-                                            app.status === 'rejected' ? 'Reddedildi' : 'Değerlendir';
-
-                        const appCard = document.createElement('div');
-                        appCard.className = `p-4 rounded-md shadow-sm ${statusColor}`;
-                        appCard.innerHTML = `
-                            <h3 class="font-bold text-lg">${app.name} ${app.surname}</h3>
-                            <p class="text-sm">E-posta: ${app.email}</p>
-                            <p class="text-sm">Eğitim: ${app.education}</p>
-                            <p class="text-sm font-semibold mt-2">Durum: <span class="capitalize">${app.status}</span></p>
-                            <button class="evaluate-btn mt-4 px-4 py-2 rounded-md font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300 ${app.status !== 'pending' ? 'opacity-50 cursor-not-allowed' : ''}" data-doc-id="${doc.id}" ${app.status !== 'pending' ? 'disabled' : ''}>${buttonText}</button>
+                    snapshot.forEach(doc => {
+                        const newsData = doc.data();
+                        const newsItem = document.createElement('div');
+                        newsItem.classList.add('card', 'bg-gray-100', 'p-6', 'rounded-xl', 'shadow-md');
+                        newsItem.innerHTML = `
+                            <h3 class="text-xl font-bold text-gray-800">${newsData.title || 'Başlıksız Haber'}</h3>
+                            <p class="text-gray-600 mt-2">${newsData.content}</p>
+                            <p class="text-sm text-gray-400 mt-4">Yayınlanma Tarihi: ${newsData.createdAt?.toDate().toLocaleDateString() || 'Bilinmiyor'}</p>
                         `;
-                        applicationsList.appendChild(appCard);
+                        newsFeed.appendChild(newsItem);
                     });
+                }
+            });
+        }
 
-                    document.querySelectorAll('.evaluate-btn').forEach(button => {
-                        button.addEventListener('click', async function() {
-                            const docId = this.getAttribute('data-doc-id');
-                            const docRef = doc(applicationsCollection, docId);
-                            const appDoc = await getDoc(docRef);
-                            const appData = appDoc.data();
-
-                            const approval = await showModal(`
-                                <h3 class="text-xl font-bold mb-4">Başvuru Onayı</h3>
-                                <p>${appData.email} adlı adayın başvurusunu onaylamak ister misiniz?</p>
-                            `, 'confirm');
-                            
-                            if (approval) {
-                                await setDoc(docRef, { ...appData, status: 'accepted' });
-                                await showModal(`Başvuru kabul edildi. Adaya sınav için e-posta gönderiliyor: ${appData.email}`, 'alert');
-                                showPanel('exam');
-                            } else {
-                                await setDoc(docRef, { ...appData, status: 'rejected' });
-                                await showModal(`Başvuru reddedildi. Adaya bilgilendirme e-postası gönderiliyor: ${appData.email}`, 'alert');
-                            }
-                        });
+        function loadPendingNews() {
+            if (!isAuthReady) return;
+            onSnapshot(query(newsCollection, where('status', '==', 'pending')), (snapshot) => {
+                pendingNewsList.innerHTML = '';
+                if (snapshot.empty) {
+                    pendingNewsList.innerHTML = '<p class="text-gray-500">Bekleyen haber bulunmuyor.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const newsData = doc.data();
+                        const newsItem = document.createElement('div');
+                        newsItem.classList.add('card', 'bg-gray-100', 'p-4', 'rounded-lg', 'border', 'border-gray-300');
+                        newsItem.innerHTML = `
+                            <h3 class="text-xl font-semibold">${newsData.title || 'Başlıksız'}</h3>
+                            <p class="text-gray-700 mt-2">${newsData.content}</p>
+                            <div class="mt-4 space-x-2">
+                                <button onclick="window.approveNews('${doc.id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105">Onayla</button>
+                                <button onclick="window.deleteNews('${doc.id}')" class="bg-gray-600 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition duration-300 transform hover:scale-105">Sil</button>
+                            </div>
+                        `;
+                        pendingNewsList.appendChild(newsItem);
                     });
                 }
             });
         }
         
-        // Sınav Formu Olayı
-        document.getElementById('examForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            if (!userId) {
-                showModal('Lütfen önce bir hesaba giriş yapın.', 'alert');
-                return;
-            }
-
-            const answers = {
-                q1: document.getElementById('question1').value,
-                q2: document.getElementById('question2').value,
-                q3: document.getElementById('question3').value,
-                q4: document.getElementById('question4').value,
-                q5: document.getElementById('question5').value
-            };
-            try {
-                const q = query(applicationsCollection, where("email", "==", auth.currentUser.email));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    const docRef = querySnapshot.docs[0].ref;
-                    await setDoc(docRef, { ...querySnapshot.docs[0].data(), examAnswers: answers, examCompleted: true });
-                    
-                    document.getElementById('examMessageBox').style.display = 'block';
-                    document.getElementById('examMessageBox').className = 'text-center rounded-md p-3 bg-green-100 text-green-700';
-                    document.getElementById('examMessageBox').innerHTML = `<p class="font-bold">Sınavınız başarıyla tamamlandı!</p>`;
+        function loadPublishers() {
+            if (!isAuthReady) return;
+            onSnapshot(query(publishersCollection), (snapshot) => {
+                publishersList.innerHTML = '';
+                if (snapshot.empty) {
+                    publishersList.innerHTML = '<p class="text-gray-500">Henüz yayıncı bulunmuyor.</p>';
                 } else {
-                    document.getElementById('examMessageBox').style.display = 'block';
-                    document.getElementById('examMessageBox').className = 'text-center rounded-md p-3 bg-red-100 text-red-700';
-                    document.getElementById('examMessageBox').innerHTML = `<p class="font-bold">Bir hata oluştu. Başvurunuz bulunamadı.</p>`;
+                    snapshot.forEach(doc => {
+                        const publisher = doc.data();
+                        const publisherItem = document.createElement('li');
+                        publisherItem.classList.add('text-lg', 'font-medium', 'text-gray-800');
+                        publisherItem.textContent = publisher.email;
+                        publishersList.appendChild(publisherItem);
+                    });
                 }
-            } catch (e) {
-                console.error("Sınav sonuçları güncellenirken hata oluştu: ", e);
-                document.getElementById('examMessageBox').style.display = 'block';
-                document.getElementById('examMessageBox').className = 'text-center rounded-md p-3 bg-red-100 text-red-700';
-                document.getElementById('examMessageBox').innerHTML = `<p class="font-bold">Bir hata oluştu. Lütfen tekrar deneyin.</p>`;
-            }
-        });
+            });
+        }
+
+        function loadChatMessages() {
+            if (!isAuthReady) return;
+            onSnapshot(query(chatCollection), (snapshot) => {
+                chatBox.innerHTML = '';
+                const messages = snapshot.docs.map(doc => doc.data());
+                messages.sort((a, b) => a.createdAt.toDate() - b.createdAt.toDate());
+
+                messages.forEach(messageData => {
+                    const messageElement = document.createElement('div');
+                    const isCurrentUser = messageData.userId === currentUserId;
+                    messageElement.classList.add('my-2', 'p-3', 'rounded-lg', 'max-w-xs', 'break-words', 'shadow-md', 'transition-all', 'duration-300', isCurrentUser ? 'self-end bg-blue-600 text-white' : 'self-start bg-gray-300 text-gray-800');
+                    messageElement.innerHTML = `
+                        <p class="text-xs text-gray-200 mb-1">${isCurrentUser ? 'Siz' : 'Kullanıcı ' + messageData.userId.substring(0, 8)}</p>
+                        <p>${messageData.message}</p>
+                    `;
+                    chatBox.appendChild(messageElement);
+                });
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
         
-        // Mobil Menü Olayları
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        });
-        closeMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            document.body.style.overflow = 'auto';
-        });
-
-        // Ayarlar, Emeği Geçenler, Asistan Modal İçerikleri
-        const creditsContent = `
-            <h3 class="text-xl font-bold mb-4">Emeği Geçenler</h3>
-            <ul class="text-left space-y-2">
-                <li><span class="font-semibold">Proje Yöneticisi:</span> Baran</li>
-                <li><span class="font-semibold">Web Geliştirme:</span> Google Gemini</li>
-                <li><span class="font-semibold">Tasarım:</span> Tailwind CSS</li>
-                <li><span class="font-semibold">Veri Tabanı:</span> Firebase & Firestore</li>
-            </ul>
-        `;
-        const assistantContent = `
-            <h3 class="text-xl font-bold mb-4">Asistan</h3>
-            <div class="assistant-chat">
-                <div class="chat-message">Merhaba, size nasıl yardımcı olabilirim?</div>
-            </div>
-            <div class="mt-4 flex space-x-2">
-                <input type="text" placeholder="Mesajınızı yazın..." class="flex-grow rounded-md border-gray-300 p-2">
-                <button class="bg-blue-600 text-white px-4 rounded-md">Gönder</button>
-            </div>
-        `;
-
-        function getSettingsContent() {
-            return `
-                <h3 class="text-xl font-bold mb-6">Önemli Ayarlar</h3>
-                <div class="space-y-4 text-left">
-                    <div class="flex items-center justify-between">
-                        <label for="themeSelect" class="font-medium text-gray-700">Tema Seçimi</label>
-                        <select id="themeSelect" class="p-2 rounded-md border">
-                            <option value="light">Açık Tema</option>
-                            <option value="dark">Koyu Tema</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <label for="fontSizeSelect" class="font-medium text-gray-700">Yazı Tipi Boyutu</label>
-                        <select id="fontSizeSelect" class="p-2 rounded-md border">
-                            <option value="small">Küçük</option>
-                            <option value="medium" selected>Orta</option>
-                            <option value="large">Büyük</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="font-medium text-gray-700">Yardımcı İpuçları</span>
-                        <label class="switch relative inline-block w-12 h-6">
-                            <input type="checkbox" id="tipsToggle" class="opacity-0 w-0 h-0 tips-checkbox">
-                            <span class="slider absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-400 transition duration-400 rounded-full"></span>
-                        </label>
-                    </div>
-                    <style>
-                        .tips-checkbox:checked + .slider {
-                            background-color: #3b82f6;
-                        }
-                        .tips-checkbox:focus + .slider {
-                            box-shadow: 0 0 1px #3b82f6;
-                        }
-                        .tips-checkbox:checked + .slider:before {
-                            transform: translateX(26px);
-                        }
-                        .slider:before {
-                            content: "";
-                            position: absolute;
-                            height: 18px;
-                            width: 18px;
-                            left: 4px;
-                            bottom: 3px;
-                            background-color: white;
-                            transition: 0.4s;
-                            border-radius: 50%;
-                        }
-                    </style>
-                </div>
-            `;
-        }
-
-        function setupModalListeners() {
-            creditsBtn.addEventListener('click', () => showModal(creditsContent, 'alert'));
-            settingsBtn.addEventListener('click', () => { showSettingsModal(); });
-            assistantBtn.addEventListener('click', () => showModal(assistantContent, 'alert'));
-            accountBtn.addEventListener('click', showAccountModal);
-
-            creditsBtnMobile.addEventListener('click', () => { mobileMenu.classList.remove('open'); showModal(creditsContent, 'alert'); });
-            settingsBtnMobile.addEventListener('click', () => { mobileMenu.classList.remove('open'); showSettingsModal(); });
-            assistantBtnMobile.addEventListener('click', () => { mobileMenu.classList.remove('open'); showModal(assistantContent, 'alert'); });
-            accountBtnMobile.addEventListener('click', () => { mobileMenu.classList.remove('open'); showAccountModal(); });
-        }
-
-        function showSettingsModal() {
-            showModal(getSettingsContent(), 'alert');
-            
-            setTimeout(() => {
-                const themeSelect = document.getElementById('themeSelect');
-                const fontSizeSelect = document.getElementById('fontSizeSelect');
-                const tipsToggle = document.getElementById('tipsToggle');
-
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                const savedFontSize = localStorage.getItem('fontSize') || 'medium';
-                const savedTips = localStorage.getItem('tips') === 'true';
-
-                themeSelect.value = savedTheme;
-                fontSizeSelect.value = savedFontSize;
-                tipsToggle.checked = savedTips;
-
-                themeSelect.addEventListener('change', (e) => {
-                    const selectedTheme = e.target.value;
-                    if (selectedTheme === 'dark') {
-                        document.body.classList.add('dark-mode');
-                        document.querySelector('.modal-content').classList.add('dark-mode');
-                    } else {
-                        document.body.classList.remove('dark-mode');
-                        document.querySelector('.modal-content').classList.remove('dark-mode');
-                    }
-                    localStorage.setItem('theme', selectedTheme);
+        // --- Publisher Actions ---
+        window.approveNews = async (docId) => {
+            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) return;
+            const newsRef = doc(db, `artifacts/${appId}/public/data/news/${docId}`);
+            try {
+                await updateDoc(newsRef, {
+                    status: 'approved'
                 });
+                console.log("Haber onaylandı:", docId);
+            } catch (error) {
+                console.error("Haber onaylama hatası:", error);
+            }
+        };
 
-                fontSizeSelect.addEventListener('change', (e) => {
-                    const selectedSize = e.target.value;
-                    let rootFontSize = 16;
-                    if (selectedSize === 'small') {
-                        rootFontSize = 14;
-                    } else if (selectedSize === 'large') {
-                        rootFontSize = 18;
-                    }
-                    document.body.style.fontSize = `${rootFontSize}px`;
-                    localStorage.setItem('fontSize', selectedSize);
-                });
-
-                tipsToggle.addEventListener('change', (e) => {
-                    localStorage.setItem('tips', e.target.checked);
-                    if (e.target.checked) {
-                        showModal("Yardımcı ipuçları etkinleştirildi.", "alert");
-                    } else {
-                        showModal("Yardımcı ipuçları devre dışı bırakıldı.", "alert");
-                    }
-                });
-                
-            }, 100);
-        }
+        window.deleteNews = async (docId) => {
+            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) return;
+            const newsRef = doc(db, `artifacts/${appId}/public/data/news/${docId}`);
+            try {
+                await deleteDoc(newsRef);
+                console.log("Haber silindi:", docId);
+            } catch (error) {
+                console.error("Haber silme hatası:", error);
+            }
+        };
     </script>
 </body>
 </html>
