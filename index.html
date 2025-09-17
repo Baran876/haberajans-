@@ -1,1091 +1,570 @@
 <!DOCTYPE html>
-<html lang="tr" class="light">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITACHI HABER</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Yemek Yapma Oyunu</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-bg: #f8f9fa;
-            --secondary-bg: #e9ecef;
-            --text-color: #212529;
-            --link-color: #0056b3;
-            --border-color: #dee2e6;
-            --card-bg: #fff;
-        }
-
-        .dark {
-            --primary-bg: #1a202c;
-            --secondary-bg: #2d3748;
-            --text-color: #e2e8f0;
-            --link-color: #63b3ed;
-            --border-color: #4a5568;
-            --card-bg: #2d3748;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f3e9;
         }
-
-        .text-logo {
-            font-family: 'Oswald', sans-serif;
+        .container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f7d794, #e29578);
         }
-        .view {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+        .game-card {
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 600px;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 1.5rem;
+            border: 4px solid #b56576;
         }
-        .notification {
-            background-color: var(--secondary-bg);
-            color: var(--text-color);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            animation: slideInRight 0.5s forwards;
-            min-width: 250px;
-            max-width: 350px;
-            position: relative;
-        }
-        .notification.success { background-color: #48bb78; color: #fff; }
-        .notification.error { background-color: #f56565; color: #fff; }
-        .notification-close-btn {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            font-size: 1.2rem;
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
             cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.2s;
+            box-shadow: 0 4px #8d3a4b;
         }
-        .notification-close-btn:hover {
-            opacity: 1;
+        .btn-primary {
+            background-color: #b56576;
+            color: white;
         }
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px #8d3a4b;
         }
-
-        .bg-primary { background-color: var(--primary-bg); }
-        .bg-secondary { background-color: var(--secondary-bg); }
-        .text-primary { color: var(--text-color); }
-        .modal-overlay { background-color: rgba(0, 0, 0, 0.5); }
-        .font-inter { font-family: 'Inter', sans-serif; }
-        .font-merriweather { font-family: 'Merriweather', serif; }
-        .font-lora { font-family: 'Lora', serif; }
+        .btn-secondary {
+            background-color: #f08080;
+            color: white;
+            box-shadow: 0 4px #c25959;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px #c25959;
+        }
+        .ingredient-item {
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .ingredient-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .drop-zone {
+            border: 3px dashed #b56576;
+            background-color: #f7d794;
+            transition: background-color 0.3s;
+        }
+        .drop-zone.drag-over {
+            background-color: #e29578;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+        .rank-item {
+            transition: transform 0.2s;
+        }
+        .rank-item:hover {
+            transform: translateY(-5px);
+        }
     </style>
 </head>
-<body class="flex flex-col min-h-screen font-inter">
+<body>
+    <div class="container">
+        <div class="game-card">
+            <!-- Loading Screen -->
+            <div id="loadingScreen" class="flex flex-col items-center justify-center p-8">
+                <div class="w-16 h-16 border-4 border-t-4 border-gray-200 rounded-full animate-spin border-b56576-500"></div>
+                <p class="mt-4 text-lg font-semibold text-gray-700">Oyun Yükleniyor...</p>
+            </div>
 
-    <!-- Navbar -->
-    <nav class="bg-gray-900 text-white p-4 shadow-xl sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-6">
-                <span class="text-4xl font-bold text-red-500 text-logo">ITACHI HABER</span>
-                <button onclick="window.showView('home')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Anasayfa</button>
-                <button onclick="window.showView('aboutUs')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Hakkımızda</button>
-                <button onclick="window.showView('submitNews')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Haber Paylaş</button>
-                <button onclick="window.showView('publishers')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Yayıncılar</button>
-                <button onclick="window.showView('applyForPublisher')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Yayıncı Başvuru</button>
-                <button id="publisherDashboardBtn" onclick="window.showView('publisherDashboard')" class="hover:text-red-400 transition duration-300 transform hover:scale-105 hidden">Yayıncı Paneli</button>
+            <!-- Main Menu -->
+            <div id="mainMenu" class="hidden flex-col items-center justify-center text-center p-8">
+                <h1 class="text-4xl font-bold text-[#b56576] mb-4">Şefin Mutfağı</h1>
+                <p class="text-gray-700 mb-2">Kullanıcı ID: <span id="userIdDisplay" class="font-mono text-sm break-all"></span></p>
+                <div class="mb-6 space-y-2">
+                    <p class="text-lg font-semibold text-gray-800">Puan: <span id="scoreDisplay" class="text-xl font-bold text-teal-600">0</span></p>
+                    <p class="text-lg font-semibold text-gray-800">Rütbe: <span id="rankDisplay" class="text-xl font-bold text-orange-600">Acemi</span></p>
+                </div>
+                <button id="startGameBtn" class="btn btn-primary w-full max-w-sm mb-4">Oyuna Başla</button>
+                <button id="marketBtn" class="btn btn-secondary w-full max-w-sm">Markete Git</button>
             </div>
-            <div class="flex items-center space-x-4">
-                <button onclick="window.showView('chat')" class="hover:text-red-400 transition duration-300 transform hover:scale-105">Sohbet</button>
-                <button id="settingsBtn" class="p-2 rounded-full hover:bg-gray-700 transition-colors" onclick="window.showModal('settingsModal')">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.527.272 1.042.417 1.573.424 1.343.018 2.578-.544 3.42-1.503zM12 18a6 6 0 100-12 6 6 0 000 12z" />
-                    </svg>
-                </button>
-                <button id="accountsBtn" class="p-2 rounded-full hover:bg-gray-700 transition-colors" onclick="window.showModal('accountsModal')">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                </button>
-            </div>
-            <div id="authButtons" class="flex items-center space-x-2">
-                <button onclick="window.showAuthModal('login')" class="bg-red-600 text-white font-bold py-2 px-4 rounded-full hover:bg-red-700 transition duration-300">Giriş Yap</button>
-                <button onclick="window.showAuthModal('signup')" class="bg-green-600 text-white font-bold py-2 px-4 rounded-full hover:bg-green-700 transition duration-300">Kayıt Ol</button>
-            </div>
-            <div id="userProfile" class="hidden flex items-center space-x-2">
-                <span id="userRoleDisplay" class="bg-gray-700 text-white text-xs font-semibold px-2 py-1 rounded-full"></span>
-                <span id="userEmailDisplay" class="text-white font-medium"></span>
-                <button onclick="window.logout()" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-full hover:bg-gray-600 transition duration-300">Çıkış Yap</button>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow p-8 container mx-auto bg-primary">
-        
-        <!-- View Container -->
-        <div id="views" class="space-y-12">
-
-            <!-- Anasayfa -->
-            <div id="home" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h1 class="text-4xl font-bold text-primary mb-6">Son Dakika Haberleri</h1>
-                <div id="newsFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Haberler buraya yüklenecek -->
+            <!-- Game Screen -->
+            <div id="gameScreen" class="hidden flex-col">
+                <div class="mb-4 text-center">
+                    <p class="text-lg text-gray-700 font-semibold">Yapılacak Yemek:</p>
+                    <h2 id="dishName" class="text-3xl font-bold text-[#b56576]"></h2>
+                </div>
+                <div class="mb-4 p-4 bg-gray-100 rounded-lg border border-gray-200">
+                    <p class="text-lg font-semibold text-gray-800 mb-2">Gerekli Malzemeler:</p>
+                    <ul id="requiredIngredientsList" class="flex flex-wrap gap-2 text-sm text-gray-600"></ul>
+                </div>
+                <!-- Drop Zone for the Dish -->
+                <div id="dropZone" class="drop-zone p-8 rounded-lg mb-4 text-center font-semibold text-gray-800">
+                    Malzemeleri Buraya Sürükleyin!
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg border border-gray-200">
+                    <p class="text-lg font-semibold text-gray-800 mb-2">Malzeme Tezgahı:</p>
+                    <div id="ingredientGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4"></div>
+                </div>
+                <div class="mt-4 text-center">
+                    <p class="text-lg font-semibold text-gray-800">Puan: <span id="gameScoreDisplay" class="text-xl font-bold text-teal-600"></span></p>
                 </div>
             </div>
 
-            <!-- Hakkımızda Bölümü -->
-            <div id="aboutUs" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h1 class="text-4xl font-bold text-primary mb-6 border-b-4 border-red-500 pb-2">Hakkımızda</h1>
-                <div class="space-y-6 text-primary leading-relaxed">
-                    <p>ITACHI HABER, güncel gelişmeleri en hızlı ve doğru şekilde okuyucularına ulaştırmayı hedefleyen modern bir haber ajansı simülasyonudur. Şeffaflık, tarafsızlık ve güvenilirlik ilkeleriyle yola çıkarak, toplumsal olaylara, teknolojiye, ekonomiye ve kültüre dair en önemli haberleri derliyoruz.</p>
-                    <p>Platformumuz, bağımsız gazetecilerin ve vatandaş muhabirlerinin sesini duyurmasına olanak tanır. Kullanıcılarımız, sisteme anonim olarak haber gönderimi yapabilir veya yayıncı statüsü alarak onaylanmış haberleri yayınlayabilir. Her haber, yayınlanmadan önce editör ekibimiz tarafından titizlikle incelenir ve teyit edilir.</p>
-                    <p>Misyonumuz, bilgiye erişimi kolaylaştırmak ve herkesin doğru habere ulaşmasını sağlamaktır. Bu platform, yalnızca haber paylaşımını değil, aynı zamanda kullanıcılar arasında açık ve saygılı bir iletişim ortamını da teşvik etmektedir.</p>
-                    <p class="font-semibold text-primary">ITACHI HABER ekibi olarak, sizleri de aramızda görmekten mutluluk duyarız.</p>
+            <!-- Market Screen -->
+            <div id="marketScreen" class="hidden flex-col items-center">
+                <h2 class="text-3xl font-bold text-[#b56576] mb-4">Market</h2>
+                <p class="text-lg font-semibold text-gray-800 mb-4">Puanınız: <span id="marketScoreDisplay" class="text-xl font-bold text-teal-600">0</span></p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                    <!-- Rütbeler burada oluşturulacak -->
                 </div>
-            </div>
-
-            <!-- Haber Paylaşma Alanı -->
-            <div id="submitNews" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6">Haber Paylaşın</h2>
-                <div class="bg-red-900 border border-red-700 text-red-200 p-4 rounded-lg mb-4">
-                    <p class="font-medium">Anonim olarak haber gönderiyorsunuz. Kimliğiniz gizlidir.</p>
-                </div>
-                <form id="newsForm" class="space-y-6">
-                    <div>
-                        <label for="newsTitle" class="block text-primary font-medium mb-2">Başlık (Opsiyonel)</label>
-                        <input type="text" id="newsTitle" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-secondary text-primary border-border-color">
-                    </div>
-                    <div>
-                        <label for="newsContent" class="block text-primary font-medium mb-2">Haber İçeriği</label>
-                        <textarea id="newsContent" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-48 transition duration-200 bg-secondary text-primary border-border-color" required></textarea>
-                    </div>
-                    <div>
-                        <label for="newsFile" class="block text-primary font-medium mb-2">Dosya Yükle (Opsiyonel)</label>
-                        <input type="file" id="newsFile" class="w-full text-primary">
-                    </div>
-                    <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Haberi Gönder</button>
-                    <div id="newsMessage" class="mt-4 text-center font-medium"></div>
-                </form>
-            </div>
-            
-            <!-- Yayıncı Başvuru Alanı -->
-            <div id="applyForPublisher" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6">Yayıncı Olarak Başvuru</h2>
-                <div class="bg-yellow-900 border border-yellow-700 text-yellow-200 p-4 rounded-lg mb-4">
-                    <p class="font-medium">Başvurunuz, bir yönetici tarafından incelenecek ve onaylandığında rolünüz otomatik olarak değişecektir.</p>
-                </div>
-                <p class="text-primary mb-4">Lütfen aşağıdaki soruları yanıtlayarak yayıncı olma isteğinizi bize iletin.</p>
-                <form id="publisherApplicationForm" class="space-y-6">
-                    <div>
-                        <label for="q1" class="block text-primary font-medium mb-2">1. Neden ITACHI HABER platformunda yayıncı olmak istiyorsunuz?</label>
-                        <textarea id="q1" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-24 bg-secondary text-primary border-border-color" required></textarea>
-                    </div>
-                    <div>
-                        <label for="q2" class="block text-primary font-medium mb-2">2. Haber yazma veya medya alanında daha önce deneyiminiz oldu mu?</label>
-                        <textarea id="q2" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 h-24 bg-secondary text-primary border-border-color" required></textarea>
-                    </div>
-                    <div>
-                        <label for="q3" class="block text-primary font-medium mb-2">3. Başvurduğunuz e-posta adresini doğrulayın.</label>
-                        <input type="email" id="q3" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-secondary text-primary border-border-color" required>
-                    </div>
-                    <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Başvuruyu Gönder</button>
-                    <div id="applicationMessage" class="mt-4 text-center font-medium"></div>
-                </form>
-            </div>
-            
-            <!-- Yayıncılar Listesi -->
-            <div id="publishers" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Yayıncılarımız</h2>
-                <ul id="publishersList" class="list-disc list-inside space-y-3 text-primary">
-                    <!-- Yayıncılar buraya yüklenecek -->
-                </ul>
-            </div>
-
-            <!-- Yayıncı Paneli -->
-            <div id="publisherDashboard" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Yayıncı Paneli</h2>
-                <div class="space-y-8">
-                    <!-- Bekleyen Haberler -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-primary mb-4">Bekleyen Haberler</h3>
-                        <div id="pendingNewsList" class="space-y-6">
-                            <p class="text-primary/70">Bekleyen haberler yükleniyor...</p>
-                        </div>
-                    </div>
-                    <!-- Yayıncı Başvuruları -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-primary mb-4">Yayıncı Başvuruları</h3>
-                        <div id="publisherApplicationsList" class="space-y-6">
-                            <p class="text-primary/70">Bekleyen başvuru bulunmuyor.</p>
-                        </div>
-                    </div>
-                    <!-- Yeni Yayıncı Oluştur -->
-                    <div>
-                        <h3 class="text-2xl font-bold text-primary mb-4">Yeni Yayıncı Oluştur</h3>
-                        <p class="text-primary/70 mb-4">E-posta ve şifre ile yeni bir yayıncı hesabı oluşturun.</p>
-                        <form id="createPublisherForm" class="space-y-4">
-                            <div>
-                                <label for="newPublisherEmail" class="block text-primary font-medium mb-2">Yeni Yayıncı E-postası</label>
-                                <input type="email" id="newPublisherEmail" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-secondary text-primary border-border-color" required>
-                            </div>
-                            <div>
-                                <label for="newPublisherPassword" class="block text-primary font-medium mb-2">Yeni Yayıncı Şifresi</label>
-                                <input type="password" id="newPublisherPassword" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 bg-secondary text-primary border-border-color" required minlength="6">
-                            </div>
-                            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-full hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg">Yayıncı Oluştur</button>
-                            <div id="createPublisherMessage" class="mt-4 text-center font-medium"></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sohbet Alanı -->
-            <div id="chat" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Canlı Sohbet</h2>
-                <div id="chatBox" class="bg-primary h-96 p-4 rounded-lg overflow-y-auto mb-4 border border-border-color flex flex-col-reverse">
-                    <!-- Sohbet mesajları buraya gelecek -->
-                </div>
-                <form id="chatForm" class="flex space-x-4">
-                    <input type="text" id="chatMessageInput" class="flex-grow p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-secondary text-primary border-border-color" placeholder="Bir mesaj yazın..." required>
-                    <button type="submit" class="bg-green-600 text-white font-bold py-4 px-8 rounded-full hover:bg-green-700 transition duration-300 transform hover:scale-105 shadow-lg">Gönder</button>
-                </form>
-            </div>
-
-            <!-- Ayarlar Menüsü -->
-            <div id="settings" class="view p-8 card rounded-2xl shadow-xl hidden">
-                <h2 class="text-3xl font-semibold text-primary mb-6 border-b-4 border-red-500 pb-2">Hesap Ayarları</h2>
-                <div id="settingsMessage" class="mt-4 text-center font-medium"></div>
-
-                <div class="space-y-8">
-                    <!-- E-posta Güncelleme Formu -->
-                    <form id="updateEmailForm" class="space-y-4">
-                        <h3 class="text-xl font-semibold text-primary">E-posta Adresini Güncelle</h3>
-                        <div>
-                            <label for="newEmail" class="block text-primary font-medium mb-2">Yeni E-posta</label>
-                            <input type="email" id="newEmail" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-secondary text-primary border-border-color" required>
-                        </div>
-                        <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">E-postayı Güncelle</button>
-                    </form>
-
-                    <!-- Şifre Güncelleme Formu -->
-                    <form id="updatePasswordForm" class="space-y-4">
-                        <h3 class="text-xl font-semibold text-primary">Şifreyi Güncelle</h3>
-                        <div>
-                            <label for="newPassword" class="block text-primary font-medium mb-2">Yeni Şifre</label>
-                            <input type="password" id="newPassword" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-secondary text-primary border-border-color" required minlength="6">
-                        </div>
-                        <button type="submit" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Şifreyi Güncelle</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Auth Modal -->
-        <div id="authModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[99]">
-            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 id="authModalTitle" class="text-3xl font-bold text-gray-100"></h2>
-                    <button onclick="window.closeAuthModal()" class="text-gray-400 hover:text-gray-100 transition duration-300 transform hover:scale-110">&times;</button>
-                </div>
-                <form id="authForm" class="space-y-6">
-                    <div>
-                        <label for="authEmail" class="block text-gray-300 font-medium mb-2">E-posta</label>
-                        <input type="email" id="authEmail" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white border-gray-700" required>
-                    </div>
-                    <div>
-                        <label for="authPassword" class="block text-gray-300 font-medium mb-2">Şifre</label>
-                        <input type="password" id="authPassword" class="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 bg-gray-900 text-white border-gray-700" required minlength="6">
-                    </div>
-                    <button type="submit" id="authSubmitBtn" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg"></button>
-                    <div id="authMessage" class="mt-4 text-center font-medium"></div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Message Box -->
-        <div id="messageBox" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden flex justify-center items-center p-4 z-[100]">
-            <div class="bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 id="messageBoxTitle" class="text-3xl font-bold text-gray-100"></h2>
-                    <button onclick="window.closeMessageBox()" class="text-gray-400 hover:text-gray-100 transition duration-300 transform hover:scale-110">&times;</button>
-                </div>
-                <p id="messageBoxContent" class="text-gray-300 mb-6"></p>
-                <button onclick="window.closeMessageBox()" class="w-full bg-red-600 text-white font-bold py-4 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">Tamam</button>
-            </div>
-        </div>
-    </main>
-    
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal-overlay hidden fixed inset-0 flex items-center justify-center p-4 z-50">
-        <div class="card w-full max-w-md p-6 rounded-xl shadow-lg relative">
-            <button id="closeSettingsBtn" class="absolute top-4 right-4 text-xl text-primary">&times;</button>
-            <h3 class="text-xl font-bold mb-4 text-primary">Ayarlar</h3>
-            <div class="mb-4">
-                <label class="block text-primary mb-2">Tema Seçimi</label>
-                <select id="themeSelect" class="w-full p-2 rounded-lg bg-secondary text-primary border border-border-color">
-                    <option value="light">Açık Tema</option>
-                    <option value="dark">Koyu Tema</option>
-                </select>
-            </div>
-            <div class="mb-4">
-                <label class="block text-primary mb-2">Yazı Fontu</label>
-                <select id="fontSelect" class="w-full p-2 rounded-lg bg-secondary text-primary border border-border-color">
-                    <option value="font-inter">Inter (Varsayılan)</option>
-                    <option value="font-merriweather">Merriweather</option>
-                    <option value="font-lora">Lora</option>
-                </select>
+                <button id="backToMenuBtn" class="btn btn-secondary w-full max-w-sm mt-6">Menüye Dön</button>
             </div>
         </div>
     </div>
 
-    <!-- Accounts Modal -->
-    <div id="accountsModal" class="modal-overlay hidden fixed inset-0 flex items-center justify-center p-4 z-50">
-        <div class="card w-full max-w-lg p-6 rounded-xl shadow-lg relative">
-            <button id="closeAccountsBtn" class="absolute top-4 right-4 text-xl text-primary">&times;</button>
-            <h3 class="text-xl font-bold mb-4 text-primary">Kullanıcı Yönetimi</h3>
-            <p id="userIdDisplay" class="text-sm mb-4 break-all text-primary/70">Kullanıcı Kimliği: Yükleniyor...</p>
-            <div class="mb-4">
-                <h4 class="font-semibold mb-2 text-primary">Kullanıcı Listesi</h4>
-                <div id="usersList" class="space-y-2 max-h-60 overflow-y-auto">
-                    <p class="text-center text-primary/70">Kullanıcılar yükleniyor...</p>
-                </div>
-            </div>
-             <p id="messageBoxModal" class="text-sm text-center mt-4 hidden p-2 rounded-md"></p>
+    <!-- Modal for Messages -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div id="modalContent" class="modal-content">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-2"></h3>
+            <p id="modalMessage" class="mb-4 text-gray-700"></p>
+            <button id="modalCloseBtn" class="btn btn-primary">Tamam</button>
         </div>
     </div>
-    
-    <!-- Notification Container -->
-    <div id="notificationContainer" class="notification-container"></div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 text-center p-6 mt-8">
-        <p>&copy; 2024 ITACHI HABER. Tüm Hakları Saklıdır.</p>
-    </footer>
-
-    <!-- Firebase Scripts -->
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateEmail, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Debug için log seviyesini ayarlayın
+        setLogLevel('debug');
 
-        // Firebase yapılandırma bilgileri
-        const firebaseConfig = {
-            apiKey: "AIzaSyD-nr4EJnAmyurBGMJ7JQzqdC4kYaVHoTI",
-            authDomain: "esee-240a6.firebaseapp.com",
-            projectId: "esee-240a6",
-            storageBucket: "esee-240a6.appspot.com",
-            messagingSenderId: "1016496897853",
-            appId: "1:1016496897853:web:631d976b5e7c2423194f54",
-            measurementId: "G-72ZLZ5B9BZ"
+        // Sabitler
+        const dishes = [
+            { name: "Spagetti Bolonez", ingredients: ["spagetti", "kıyma", "domates sosu", "soğan", "sarımsak"] },
+            { name: "Lazanya", ingredients: ["lazanya hamuru", "beşamel sos", "kıyma", "mozzarella"] },
+            { name: "Tavuk Sote", ingredients: ["tavuk göğsü", "biber", "domates", "soğan", "kekik"] },
+            { name: "Mercimek Çorbası", ingredients: ["mercimek", "soğan", "havuç", "salça", "nane"] },
+            { name: "İskender Kebap", ingredients: ["döner eti", "pide", "yoğurt", "domates sosu", "tereyağı"] },
+            { name: "Pirinç Pilavı", ingredients: ["pirinç", "tereyağı", "su", "tuz"] },
+            { name: "İmam Bayıldı", ingredients: ["patlıcan", "soğan", "domates", "sarımsak", "maydanoz"] },
+            { name: "Fırında Tavuk", ingredients: ["bütün tavuk", "patates", "soğan", "biber", "kekik"] },
+            { name: "Adana Kebap", ingredients: ["kuzu kıyma", "pul biber", "soğan", "domates", "salça"] },
+            { name: "Etli Güveç", ingredients: ["dana kuşbaşı", "patates", "havuç", "bezelye", "domates"] },
+            { name: "Baklava", ingredients: ["yufka", "antep fıstığı", "tereyağı", "şeker", "limon"] },
+            { name: "Sarma", ingredients: ["asma yaprağı", "pirinç", "kıyma", "soğan", "baharat"] },
+            { name: "Karnıyarık", ingredients: ["patlıcan", "kıyma", "soğan", "biber", "domates"] },
+            { name: "Mantı", ingredients: ["mantı hamuru", "kıyma", "yoğurt", "sarımsak", "nane"] },
+            { name: "Güllaç", ingredients: ["güllaç yaprağı", "süt", "şeker", "gül suyu", "nar"] },
+            { name: "İçli Köfte", ingredients: ["bulgur", "kıyma", "soğan", "ceviz", "baharat"] },
+            { name: "Ezogelin Çorbası", ingredients: ["mercimek", "bulgur", "pirinç", "salça", "nane"] },
+            { name: "Kuru Fasulye", ingredients: ["kuru fasulye", "pastırma", "soğan", "domates salçası", "sıvı yağ"] },
+            { name: "Hamsi Tava", ingredients: ["hamsi", "mısır unu", "sıvı yağ", "tuz"] },
+            { name: "Menemen", ingredients: ["yumurta", "domates", "biber", "soğan", "zeytinyağı"] },
+            { name: "Sütlaç", ingredients: ["pirinç", "süt", "şeker", "vanilya"] },
+            { name: "Kadayıf Dolması", ingredients: ["kadayıf", "ceviz", "şeker", "tereyağı"] },
+            { name: "Yaprak Döner", ingredients: ["yaprak döner", "domates", "biber", "lavaş", "yoğurt"] },
+            { name: "Sebzeli Musakka", ingredients: ["patlıcan", "kıyma", "soğan", "biber", "domates"] },
+            { name: "Tavuklu Pilav", ingredients: ["pirinç", "haşlanmış tavuk", "tereyağı", "karabiber"] },
+            { name: "Sucuklu Yumurta", ingredients: ["yumurta", "sucuk", "tereyağı"] },
+            { name: "Kumpir", ingredients: ["büyük patates", "kaşar peyniri", "tereyağı", "mısır", "sosis"] },
+            { name: "Sigara Böreği", ingredients: ["yufka", "beyaz peynir", "maydanoz"] },
+            { name: "Kıymalı Pide", ingredients: ["pide hamuru", "kıyma", "soğan", "domates", "biber"] },
+            { name: "Poğaça", ingredients: ["un", "süt", "yağ", "maya", "peynir"] },
+            { name: "Ayran Aşı Çorbası", ingredients: ["yoğurt", "buğday", "nohut", "nane", "pul biber"] },
+            { name: "Mercimek Köftesi", ingredients: ["kırmızı mercimek", "ince bulgur", "salça", "soğan", "maydanoz"] },
+            { name: "Kısır", ingredients: ["ince bulgur", "domates salçası", "biber salçası", "soğan", "maydanoz"] },
+            { name: "Dolma Biber", ingredients: ["dolmalık biber", "pirinç", "kıyma", "soğan", "baharat"] },
+            { name: "Tavuk Şiş", ingredients: ["tavuk", "biber", "domates", "soğan", "yoğurt"] },
+            { name: "Sosisli Sandviç", ingredients: ["sosis", "sandviç ekmeği", "ketçap", "mayonez"] },
+            { name: "Hamburger", ingredients: ["hamburger köftesi", "hamburger ekmeği", "marul", "domates", "turşu"] },
+            { name: "Pizza", ingredients: ["pizza hamuru", "mozzarella", "sucuk", "domates sosu", "mantar"] },
+            { name: "Balık Ekmek", ingredients: ["balık", "ekmek", "marul", "soğan", "limon"] },
+            { name: "Tost", ingredients: ["tost ekmeği", "kaşar peyniri", "sucuk", "domates"] },
+            { name: "Gözleme", ingredients: ["yufka", "patates", "peynir", "ıspanak", "tereyağı"] },
+            { name: "Kremalı Mantar Çorbası", ingredients: ["mantar", "krema", "un", "tereyağı", "soğan"] },
+            { name: "Tiramisu", ingredients: ["savoyar", "mascarpone peyniri", "yumurta", "kahve", "kakao"] },
+            { name: "Cheesecake", ingredients: ["labne peyniri", "biskuvi", "tereyağı", "şeker", "krema"] },
+            { name: "Brownie", ingredients: ["çikolata", "tereyağı", "şeker", "un", "yumurta"] },
+            { name: "Profiterol", ingredients: ["hamur", "krema", "çikolata sosu", "yumurta", "tereyağı"] },
+            { name: "Magnolia", ingredients: ["muhallebi", "muz", "çilek", "bebe bisküvisi"] },
+            { name: "Sufle", ingredients: ["çikolata", "tereyağı", "yumurta", "şeker", "un"] },
+            { name: "Tavuklu Sezar Salata", ingredients: ["tavuk", "marul", "kıtır ekmek", "parmesan", "sezar sos"] },
+            { name: "Omlet", ingredients: ["yumurta", "peynir", "sucuk", "biber", "tereyağı"] },
+        ];
+        
+        // Malzemelerin görselleri için emoji ve isim eşleştirmesi
+        const ingredientVisuals = {
+            "spagetti": "🍝", "kıyma": "🥩", "domates sosu": "🥫", "soğan": "🧅", "sarımsak": "🧄",
+            "lazanya hamuru": "📜", "beşamel sos": "🥣", "mozzarella": "🧀",
+            "tavuk göğsü": "🍗", "biber": "🫑", "domates": "🍅", "kekik": "🌿",
+            "mercimek": "🥣", "havuç": "🥕", "salça": "🥫", "nane": "🍃",
+            "döner eti": "🍖", "pide": "🍞", "yoğurt": "🥛", "tereyağı": "🧈",
+            "pirinç": "🍚", "su": "💧", "tuz": "🧂", "patlıcan": "🍆", "maydanoz": "🌿",
+            "bütün tavuk": "🍗", "patates": "🥔", "kuzu kıyma": "🥩", "pul biber": "🌶️",
+            "dana kuşbaşı": "🥩", "bezelye": "🟢", "yufka": "📜", "antep fıstığı": "🌰",
+            "asma yaprağı": "🥬", "baharat": "🧂", "mantı hamuru": "📜",
+            "güllaç yaprağı": "📜", "süt": "🥛", "şeker": "🍚", "gül suyu": "🌹", "nar": "🔴",
+            "bulgur": "🍚", "ceviz": "🌰", "kırmızı mercimek": "🥣", "ince bulgur": "🍚",
+            "kuru fasulye": "🫘", "pastırma": "🥓", "sıvı yağ": "🍾", "hamsi": "🐟", "mısır unu": "🌾",
+            "yumurta": "🥚", "zeytinyağı": "🍾", "vanilya": "🍦", "kadayıf": "🍜",
+            "yaprak döner": "🍖", "lavaş": "🌯", "haşlanmış tavuk": "🍗", "karabiber": "🧂",
+            "sucuk": "🌭", "kaşar peyniri": "🧀", "mısır": "🌽", "sosis": "🌭", "peynir": "🧀",
+            "sandviç ekmeği": "🥪", "ketçap": "🍅", "mayonez": "🥣", "hamburger köftesi": "🍔",
+            "hamburger ekmeği": "🍔", "marul": "🥬", "turşu": "🥒", "pizza hamuru": "🍕",
+            "mozzarella": "🧀", "mantar": "🍄", "balık": "🐟", "ekmek": "🍞", "limon": "🍋",
+            "tost ekmeği": "🥪", "ıspanak": "🥬", "krema": "🥛", "un": "🍚", "savoyar": "📜",
+            "mascarpone peyniri": "🧀", "kahve": "☕", "kakao": "🍫", "labne peyniri": "🧀",
+            "biskuvi": "🍪", "çikolata": "🍫", "hamur": "📜", "çikolata sosu": "🍫",
+            "muhallebi": "🥣", "muz": "🍌", "çilek": "🍓", "bebe bisküvisi": "🍪",
+            "kıtır ekmek": "🍞", "parmesan": "🧀", "sezar sos": "🥣",
+            "salatalık": "🥒", "avokado": "🥑", "karnabahar": "🥦", "brokoli": "🥦", "pırasa": "🧅", "kabak": "🥒", "zeytin": "🫒",
+            "turşu": "🥒", "kabartma tozu": "🍚", "maya": "⚪", "kırmızı soğan": "🧅", "yoğurt": "🥛", "nohut": "🫘", "buğday": "🌾"
         };
-        const appId = "1:1016496897853:web:631d976b5e7c2423194f54";
         
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const storage = getStorage(app);
-        let currentUserId = null;
-        let isPublisher = false;
-        let isAuthReady = false;
+        // Rütbeler ve maliyetleri
+        const ranks = [
+            { id: 0, name: "Acemi", cost: 0 },
+            { id: 1, name: "Çırak Şef", cost: 500 },
+            { id: 2, name: "Genç Şef", cost: 2000 },
+            { id: 3, name: "Usta Şef", cost: 5000 },
+            { id: 4, name: "Baş Şef", cost: 10000 },
+        ];
 
-        // UI elements
-        const body = document.body;
-        const views = document.querySelectorAll('.view');
-        const newsForm = document.getElementById('newsForm');
-        const newsMessage = document.getElementById('newsMessage');
-        const pendingNewsList = document.getElementById('pendingNewsList');
-        const chatForm = document.getElementById('chatForm');
-        const chatBox = document.getElementById('chatBox');
-        const chatMessageInput = document.getElementById('chatMessageInput');
-        const publisherDashboardBtn = document.getElementById('publisherDashboardBtn');
-        const authButtons = document.getElementById('authButtons');
-        const userProfile = document.getElementById('userProfile');
-        const userEmailDisplay = document.getElementById('userEmailDisplay');
-        const userRoleDisplay = document.getElementById('userRoleDisplay');
-        const authModal = document.getElementById('authModal');
-        const authModalTitle = document.getElementById('authModalTitle');
-        const authSubmitBtn = document.getElementById('authSubmitBtn');
-        const authEmailInput = document.getElementById('authEmail');
-        const authPasswordInput = document.getElementById('authPassword');
-        const authMessage = document.getElementById('authMessage');
-        const publishersList = document.getElementById('publishersList');
-        const updateEmailForm = document.getElementById('updateEmailForm');
-        const updatePasswordForm = document.getElementById('updatePasswordForm');
-        const settingsMessage = document.getElementById('settingsMessage');
-        const messageBox = document.getElementById('messageBox');
-        const messageBoxTitle = document.getElementById('messageBoxTitle');
-        const messageBoxContent = document.getElementById('messageBoxContent');
-        const newsFeed = document.getElementById('newsFeed');
-        const publisherApplicationForm = document.getElementById('publisherApplicationForm');
-        const applicationMessage = document.getElementById('applicationMessage');
-        const publisherApplicationsList = document.getElementById('publisherApplicationsList');
-        const createPublisherForm = document.getElementById('createPublisherForm');
-        const createPublisherMessage = document.getElementById('createPublisherMessage');
-        const newsFileInput = document.getElementById('newsFile');
-        const notificationContainer = document.getElementById('notificationContainer');
+        // Global değişkenler
+        let db, auth;
+        let userId = 'default-user-id';
+        let userPoints = 0;
+        let userRankId = 0;
+        let currentGameScore = 0;
+        let currentDish = null;
+        let ingredientsAdded = [];
+        let isGameActive = false;
         
-        // New UI elements for settings and accounts
-        const settingsModal = document.getElementById('settingsModal');
-        const accountsModal = document.getElementById('accountsModal');
-        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-        const closeAccountsBtn = document.getElementById('closeAccountsBtn');
-        const themeSelect = document.getElementById('themeSelect');
-        const fontSelect = document.getElementById('fontSelect');
-        const usersList = document.getElementById('usersList');
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // HTML elementleri
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainMenu = document.getElementById('mainMenu');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const marketBtn = document.getElementById('marketBtn');
+        const gameScreen = document.getElementById('gameScreen');
+        const marketScreen = document.getElementById('marketScreen');
+        const backToMenuBtn = document.getElementById('backToMenuBtn');
+        const dishNameDisplay = document.getElementById('dishName');
+        const requiredIngredientsList = document.getElementById('requiredIngredientsList');
+        const ingredientGrid = document.getElementById('ingredientGrid');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const rankDisplay = document.getElementById('rankDisplay');
+        const gameScoreDisplay = document.getElementById('gameScoreDisplay');
+        const marketScoreDisplay = document.getElementById('marketScoreDisplay');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
         const userIdDisplay = document.getElementById('userIdDisplay');
-        const messageBoxModal = document.getElementById('messageBoxModal');
+        const dropZone = document.getElementById('dropZone');
 
-        // Firestore collection references
-        const newsCollection = collection(db, `artifacts/${appId}/public/data/news`);
-        const chatCollection = collection(db, `artifacts/${appId}/public/data/chat`);
-        const publishersCollection = collection(db, `artifacts/${appId}/public/data/publishers`);
-        const publisherApplicationsCollection = collection(db, `artifacts/${appId}/public/data/publisherApplications`);
-        const usersCollection = collection(db, `artifacts/${appId}/public/data/users`);
-        
-        // --- UI Functions ---
-        window.showView = (viewId) => {
-            if (!isAuthReady) return; 
-            views.forEach(view => {
-                view.classList.add('hidden');
-            });
-            document.getElementById(viewId).classList.remove('hidden');
-        };
+        // Firebase ve kimlik doğrulama
+        window.onload = async () => {
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
 
-        window.showMessageBox = (title, message) => {
-            messageBoxTitle.textContent = title;
-            messageBoxContent.textContent = message;
-            messageBox.classList.remove('hidden');
-        };
-
-        window.closeMessageBox = () => {
-            messageBox.classList.add('hidden');
-        };
-        
-        window.showModal = (modalId) => {
-            document.getElementById(modalId).classList.remove('hidden');
-        };
-
-        window.closeModal = (modalId) => {
-            document.getElementById(modalId).classList.add('hidden');
-        };
-
-        window.showNotification = (message, type = 'info') => {
-            const notification = document.createElement('div');
-            notification.classList.add('notification', type);
-            notification.innerHTML = `
-                <p class="font-semibold">${message}</p>
-                <span class="notification-close-btn">&times;</span>
-            `;
-            notificationContainer.appendChild(notification);
-            
-            notification.querySelector('.notification-close-btn').addEventListener('click', () => {
-                notification.remove();
-            });
-
-            setTimeout(() => {
-                notification.remove();
-            }, 5000);
-        };
-
-        window.showAuthModal = (mode) => {
-            if (mode === 'login') {
-                authModalTitle.textContent = 'Giriş Yap';
-                authSubmitBtn.textContent = 'Giriş Yap';
-                authForm.onsubmit = window.handleLogin;
-            } else if (mode === 'signup') {
-                authModalTitle.textContent = 'Kayıt Ol';
-                authSubmitBtn.textContent = 'Kayıt Ol';
-                authForm.onsubmit = window.handleSignup;
-            }
-            authModal.classList.remove('hidden');
-            authMessage.textContent = '';
-            authForm.reset();
-        };
-
-        window.closeAuthModal = () => {
-            authModal.classList.add('hidden');
-        };
-        
-        function showModalMessage(message, type = 'info') {
-            messageBoxModal.textContent = message;
-            messageBoxModal.className = `text-sm text-center mt-4 p-2 rounded-md ${type === 'success' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`;
-            messageBoxModal.classList.remove('hidden');
-            setTimeout(() => {
-                messageBoxModal.classList.add('hidden');
-            }, 3000);
-        }
-
-        // --- Persistent Settings ---
-        function loadSettings() {
-            const savedTheme = localStorage.getItem('theme');
-            const savedFont = localStorage.getItem('font');
-
-            if (savedTheme) {
-                body.classList.remove('light', 'dark');
-                body.classList.add(savedTheme);
-                themeSelect.value = savedTheme;
-            }
-            if (savedFont) {
-                body.className = body.className.split(' ').filter(c => !c.startsWith('font-')).join(' ');
-                body.classList.add(savedFont);
-                fontSelect.value = savedFont;
-            }
-        }
-
-        function saveSettings() {
-            localStorage.setItem('theme', themeSelect.value);
-            localStorage.setItem('font', fontSelect.value);
-        }
-
-        // --- Auth Functions ---
-        window.handleLogin = async (e) => {
-            e.preventDefault();
-            const email = authEmailInput.value;
-            const password = authPasswordInput.value;
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                authMessage.textContent = 'Başarıyla giriş yapıldı!';
-                authMessage.classList.add('text-green-600');
-                window.closeAuthModal();
-            } catch (error) {
-                console.error("Login Error:", error);
-                authMessage.textContent = 'Giriş hatası: ' + error.message;
-                authMessage.classList.add('text-red-600');
-            }
-        };
-
-        window.handleSignup = async (e) => {
-            e.preventDefault();
-            const email = authEmailInput.value;
-            const password = authPasswordInput.value;
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const newUserId = userCredential.user.uid;
-                await setDoc(doc(usersCollection, newUserId), { email, role: 'Okur' });
-                
-                authMessage.textContent = 'Hesap başarıyla oluşturuldu!';
-                authMessage.classList.add('text-green-600');
-                window.closeAuthModal();
-                window.showNotification('Hesabınız başarıyla oluşturuldu!', 'success');
-            } catch (error) {
-                console.error("Signup Error:", error);
-                authMessage.textContent = 'Kayıt hatası: ' + error.message;
-                authMessage.classList.add('text-red-600');
-            }
-        };
-
-        window.logout = async () => {
-            try {
-                await signOut(auth);
-            } catch (error) {
-                console.error("Logout error:", error);
-            }
-        };
-
-        // Oturum durumundaki değişiklikleri dinler
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUserId = user.uid;
-                authButtons.classList.add('hidden');
-                userProfile.classList.remove('hidden');
-
-                const userDocRef = doc(usersCollection, currentUserId);
-                const userDoc = await getDoc(userDocRef);
-                
-                let userRole = 'Okur';
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    userRole = userData.role;
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
                 } else {
-                    // Create user document if it doesn't exist (e.g. anonymous sign-in)
-                    await setDoc(userDocRef, { email: user.email, role: 'Okur' }, { merge: true });
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Firebase kimlik doğrulama hatası:", error);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    userId = user.uid;
+                    userIdDisplay.textContent = userId;
+                    listenToUserData();
+                    loadingScreen.classList.add('hidden');
+                    mainMenu.classList.remove('hidden');
+                    mainMenu.style.display = 'flex';
+                } else {
+                    console.error("Kullanıcı kimliği alınamadı.");
+                }
+            });
+
+            // Drag and drop event listeners
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('drag-over');
+            });
+            dropZone.addEventListener('drop', handleDrop);
+        };
+
+        function listenToUserData() {
+            const userDocRef = doc(db, `artifacts/${appId}/users/${userId}/gameData/profile`);
+            onSnapshot(userDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    userPoints = data.points || 0;
+                    userRankId = data.rankId || 0;
+                } else {
+                    userPoints = 0;
+                    userRankId = 0;
+                    setDoc(userDocRef, { points: userPoints, rankId: userRankId });
+                }
+                updateUI();
+            });
+        }
+
+        // UI Güncelleme Fonksiyonu
+        function updateUI() {
+            scoreDisplay.textContent = userPoints.toLocaleString();
+            gameScoreDisplay.textContent = currentGameScore.toLocaleString();
+            marketScoreDisplay.textContent = userPoints.toLocaleString();
+            rankDisplay.textContent = ranks.find(r => r.id === userRankId).name;
+            // Market ekranını yeniden oluştur
+            if (!marketScreen.classList.contains('hidden')) {
+                renderMarketItems();
+            }
+        }
+
+        // Modal (mesaj kutusu) gösterme fonksiyonu
+        function showModal(title, message, callback) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalOverlay.style.display = 'flex';
+            modalCloseBtn.onclick = () => {
+                modalOverlay.style.display = 'none';
+                if (callback) callback();
+            };
+        }
+
+        // Oyun Butonları
+        startGameBtn.addEventListener('click', () => {
+            isGameActive = true;
+            mainMenu.style.display = 'none';
+            gameScreen.style.display = 'flex';
+            startGame();
+        });
+
+        marketBtn.addEventListener('click', () => {
+            mainMenu.style.display = 'none';
+            marketScreen.style.display = 'flex';
+            renderMarketItems();
+            updateUI();
+        });
+
+        backToMenuBtn.addEventListener('click', () => {
+            marketScreen.style.display = 'none';
+            mainMenu.style.display = 'flex';
+        });
+
+        // Oyun Başlatma
+        function startGame() {
+            currentGameScore = 1000;
+            ingredientsAdded = [];
+            
+            // Rastgele bir yemek seç
+            const randomIndex = Math.floor(Math.random() * dishes.length);
+            currentDish = dishes[randomIndex];
+            
+            dishNameDisplay.textContent = currentDish.name;
+            gameScoreDisplay.textContent = currentGameScore.toLocaleString();
+            
+            // Gerekli malzemeleri görsel ve metinle listele
+            requiredIngredientsList.innerHTML = currentDish.ingredients.map(ing => `
+                <li class="p-2 bg-white rounded-lg border border-gray-300">
+                    <span class="text-xl mr-1">${ingredientVisuals[ing] || '❓'}</span>${ing}
+                </li>
+            `).join('');
+            
+            // Malzeme tezgahını hazırla
+            renderIngredientGrid();
+        }
+
+        function renderIngredientGrid() {
+            ingredientGrid.innerHTML = '';
+            const allIngredients = [...currentDish.ingredients];
+            // 3-5 tane rastgele yanlış malzeme ekle
+            const otherIngredients = Object.keys(ingredientVisuals).filter(ing => !currentDish.ingredients.includes(ing));
+            const numOther = Math.floor(Math.random() * 3) + 3;
+            for (let i = 0; i < numOther; i++) {
+                const randomOther = otherIngredients[Math.floor(Math.random() * otherIngredients.length)];
+                if (!allIngredients.includes(randomOther)) {
+                    allIngredients.push(randomOther);
+                }
+            }
+
+            // Karıştır
+            allIngredients.sort(() => Math.random() - 0.5);
+
+            allIngredients.forEach(ingredient => {
+                const item = document.createElement('div');
+                item.className = "ingredient-item bg-orange-200 p-4 rounded-lg text-center font-semibold text-orange-800 border border-orange-300";
+                item.setAttribute('draggable', true);
+                item.setAttribute('data-ingredient', ingredient);
+                item.innerHTML = `<span class="text-3xl">${ingredientVisuals[ingredient] || '❓'}</span>`;
+                item.ondragstart = (e) => e.dataTransfer.setData('text/plain', ingredient);
+                ingredientGrid.appendChild(item);
+            });
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const ingredient = e.dataTransfer.getData('text/plain');
+            addIngredient(ingredient);
+        }
+
+        function addIngredient(ingredient) {
+            if (!isGameActive) return;
+
+            const isCorrect = currentDish.ingredients.includes(ingredient);
+            const alreadyAdded = ingredientsAdded.includes(ingredient);
+
+            if (isCorrect && !alreadyAdded) {
+                currentGameScore -= 50; // Doğru malzeme ekleyince puan kırılacak
+                ingredientsAdded.push(ingredient);
+                gameScoreDisplay.textContent = currentGameScore.toLocaleString();
+                
+                // Malzemeyi tezgahtan kaldır
+                const ingredientItem = document.querySelector(`.ingredient-item[data-ingredient="${ingredient}"]`);
+                if (ingredientItem) {
+                    ingredientItem.style.display = 'none';
                 }
 
-                userEmailDisplay.textContent = user.email || user.uid;
-                userRoleDisplay.textContent = userRole;
+                if (ingredientsAdded.length === currentDish.ingredients.length) {
+                    endGame(true);
+                }
+            } else if (alreadyAdded) {
+                showModal("Hata!", "Bu malzemeyi zaten eklediniz.", () => { /* no-op */ });
+            } else {
+                currentGameScore -= 100; // Yanlış malzeme ekleyince daha çok puan kırılsın
+                gameScoreDisplay.textContent = currentGameScore.toLocaleString();
+                showModal("Yanlış Malzeme!", "Bu yemekte bu malzeme kullanılmaz. Puanınızdan kesildi!", () => { /* no-op */ });
+            }
+        }
 
-                isPublisher = userRole === 'Yayıncı' || userRole === 'Yönetici';
+        function endGame(isSuccess) {
+            isGameActive = false;
+            let finalScore = currentGameScore;
+            let message = "";
+            let title = "";
 
-                if (isPublisher || user.email === 'baranss283@gmail.com') {
-                    publisherDashboardBtn.classList.remove('hidden');
+            if (isSuccess && finalScore > 0) {
+                title = "Tebrikler!";
+                message = `Yemeği tamamladınız ve ${finalScore} puan kazandınız!`;
+                updatePoints(finalScore);
+            } else {
+                title = "Oyun Bitti!";
+                message = "Yemeği tamamlayamadınız veya puanınız tükendi.";
+            }
+
+            showModal(title, message, () => {
+                gameScreen.style.display = 'none';
+                mainMenu.style.display = 'flex';
+                updateUI();
+            });
+        }
+
+        async function updatePoints(score) {
+            const userDocRef = doc(db, `artifacts/${appId}/users/${userId}/gameData/profile`);
+            await setDoc(userDocRef, {
+                points: userPoints + score,
+                rankId: userRankId
+            }, { merge: true });
+        }
+
+        // Market Fonksiyonları
+        function renderMarketItems() {
+            const marketGrid = marketScreen.querySelector('.grid');
+            marketGrid.innerHTML = '';
+            
+            ranks.forEach(rank => {
+                const canBuy = userPoints >= rank.cost;
+                const isCurrent = userRankId === rank.id;
+                const isDisabled = userRankId >= rank.id;
+
+                const item = document.createElement('div');
+                item.className = `rank-item p-4 rounded-lg text-center font-bold border border-gray-300 flex flex-col justify-between ${isCurrent ? 'bg-green-100' : 'bg-gray-100'}`;
+                item.innerHTML = `
+                    <h3 class="text-xl text-gray-800">${rank.name}</h3>
+                    <p class="text-sm font-normal text-gray-600 mb-2">${rank.cost > 0 ? `${rank.cost} Puan` : 'Mevcut Rütbe'}</p>
+                    <button class="buy-btn btn w-full mt-2
+                        ${canBuy && !isDisabled ? 'btn-primary' : 'bg-gray-400 cursor-not-allowed text-gray-600'}"
+                        ${!canBuy || isDisabled ? 'disabled' : ''}>
+                        ${isCurrent ? 'Mevcut' : (isDisabled ? 'Satın Alındı' : 'Satın Al')}
+                    </button>
+                `;
+
+                const buyButton = item.querySelector('.buy-btn');
+                buyButton.onclick = () => buyRank(rank.id);
+                
+                marketGrid.appendChild(item);
+            });
+        }
+
+        async function buyRank(rankId) {
+            const rankToBuy = ranks.find(r => r.id === rankId);
+            if (!rankToBuy) return;
+            
+            if (userPoints >= rankToBuy.cost) {
+                if (userRankId < rankToBuy.id) {
+                    const userDocRef = doc(db, `artifacts/${appId}/users/${userId}/gameData/profile`);
+                    await setDoc(userDocRef, {
+                        points: userPoints - rankToBuy.cost,
+                        rankId: rankId
+                    }, { merge: true });
+                    showModal("Başarılı!", `${rankToBuy.name} rütbesini satın aldınız!`, () => { /* no-op */ });
+                    updateUI();
                 } else {
-                    publisherDashboardBtn.classList.add('hidden');
+                    showModal("Hata!", "Bu rütbe zaten sizde veya daha düşük.", () => { /* no-op */ });
                 }
             } else {
-                currentUserId = null;
-                isPublisher = false;
-                publisherDashboardBtn.classList.add('hidden');
-                authButtons.classList.remove('hidden');
-                userProfile.classList.add('hidden');
+                showModal("Hata!", "Yeterli puanınız yok.", () => { /* no-op */ });
             }
-            isAuthReady = true;
-            // Load data only after authentication state is ready
-            if (isAuthReady) {
-                loadNewsFeed();
-                loadChatMessages();
-                loadPublishers();
-                loadUsers();
-                if (isPublisher || auth.currentUser?.email === 'baranss283@gmail.com') {
-                    loadPendingNews();
-                    loadPublisherApplications();
-                }
-            }
-        });
-
-        // --- Data Interaction Functions ---
-        newsForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAuthReady) {
-                window.showMessageBox("Hata", "Lütfen giriş yapın veya anonim olarak devam edin.");
-                return;
-            }
-            const newsTitle = document.getElementById('newsTitle').value;
-            const newsContent = document.getElementById('newsContent').value;
-            const file = newsFileInput.files[0];
-            let fileUrl = null;
-
-            try {
-                if (file) {
-                    const storageRef = ref(storage, `news-files/${file.name}`);
-                    await uploadBytes(storageRef, file);
-                    fileUrl = await getDownloadURL(storageRef);
-                }
-
-                await addDoc(newsCollection, {
-                    title: newsTitle,
-                    content: newsContent,
-                    status: 'pending',
-                    createdAt: new Date(),
-                    reporterId: currentUserId,
-                    fileUrl: fileUrl,
-                    fileName: file ? file.name : null
-                });
-                newsMessage.textContent = 'Haberiniz başarıyla gönderildi ve onay bekliyor.';
-                newsMessage.classList.add('text-green-600');
-                newsForm.reset();
-            } catch (error) {
-                console.error("News submission error:", error);
-                newsMessage.textContent = 'Haber gönderilirken bir hata oluştu: ' + error.message;
-                newsMessage.classList.add('text-red-600');
-            }
-        });
-
-        publisherApplicationForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAuthReady || !auth.currentUser) {
-                window.showMessageBox("Hata", "Yayıncı başvurusu yapmak için giriş yapmalısınız.");
-                return;
-            }
-            const q1 = document.getElementById('q1').value;
-            const q2 = document.getElementById('q2').value;
-            const q3 = document.getElementById('q3').value;
-            const userEmail = auth.currentUser.email;
-
-            if (q3 !== userEmail) {
-                 applicationMessage.textContent = 'Lütfen kendi e-posta adresinizi girin.';
-                 applicationMessage.classList.add('text-red-600');
-                 return;
-            }
-
-            try {
-                await addDoc(publisherApplicationsCollection, {
-                    userId: auth.currentUser.uid,
-                    email: userEmail,
-                    question1: q1,
-                    question2: q2,
-                    question3: q3,
-                    status: 'pending',
-                    appliedAt: new Date()
-                });
-                applicationMessage.textContent = 'Başvurunuz başarıyla gönderildi!';
-                applicationMessage.classList.add('text-green-600');
-                publisherApplicationForm.reset();
-            } catch (error) {
-                console.error("Publisher application error:", error);
-                applicationMessage.textContent = 'Başvuru gönderilirken bir hata oluştu.';
-                applicationMessage.classList.add('text-red-600');
-            }
-        });
-        
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAuthReady || !auth.currentUser) {
-                window.showMessageBox("Hata", "Mesaj göndermek için lütfen giriş yapın.");
-                return;
-            }
-            const message = chatMessageInput.value;
-            if (!message) return;
-            try {
-                await addDoc(chatCollection, {
-                    message,
-                    userId: currentUserId,
-                    createdAt: new Date()
-                });
-                chatMessageInput.value = '';
-            } catch (error) {
-                console.error("Chat message error:", error);
-            }
-        });
-
-        updateEmailForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAuthReady || !auth.currentUser) {
-                window.showMessageBox("Hata", "E-posta güncellemek için giriş yapmalısınız.");
-                return;
-            }
-            const newEmail = document.getElementById('newEmail').value;
-            try {
-                await updateEmail(auth.currentUser, newEmail);
-                await updateDoc(doc(usersCollection, currentUserId), { email: newEmail });
-                settingsMessage.textContent = 'E-posta başarıyla güncellendi.';
-                settingsMessage.classList.add('text-green-600');
-            } catch (error) {
-                settingsMessage.textContent = 'E-posta güncelleme hatası: ' + error.message;
-                settingsMessage.classList.add('text-red-600');
-                console.error("Email update error:", error);
-            }
-        });
-
-        updatePasswordForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAuthReady || !auth.currentUser) {
-                window.showMessageBox("Hata", "Şifre güncellemek için giriş yapmalısınız.");
-                return;
-            }
-            const newPassword = document.getElementById('newPassword').value;
-            if (newPassword.length < 6) {
-                settingsMessage.textContent = 'Şifre en az 6 karakter olmalıdır.';
-                settingsMessage.classList.add('text-red-600');
-                return;
-            }
-            try {
-                await updatePassword(auth.currentUser, newPassword);
-                settingsMessage.textContent = 'Şifre başarıyla güncellendi.';
-                settingsMessage.classList.add('text-green-600');
-            } catch (error) {
-                settingsMessage.textContent = 'Şifre güncelleme hatası: ' + error.message;
-                settingsMessage.classList.add('text-red-600');
-                console.error("Password update error:", error);
-            }
-        });
-
-        createPublisherForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!isAuthReady || auth.currentUser.email !== 'baranss283@gmail.com') {
-                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için admin olmalısınız.");
-                return;
-            }
-            const newPublisherEmail = document.getElementById('newPublisherEmail').value;
-            const newPublisherPassword = document.getElementById('newPublisherPassword').value;
-
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, newPublisherEmail, newPublisherPassword);
-                const newUserId = userCredential.user.uid;
-                
-                await setDoc(doc(publishersCollection, newUserId), {
-                    email: newPublisherEmail,
-                    appliedAt: new Date(),
-                    status: 'approved'
-                });
-                await setDoc(doc(usersCollection, newUserId), { email: newPublisherEmail, role: 'Yayıncı' });
-                
-                createPublisherMessage.textContent = 'Yeni yayıncı başarıyla oluşturuldu!';
-                createPublisherMessage.classList.add('text-green-600');
-                createPublisherForm.reset();
-            } catch (error) {
-                createPublisherMessage.textContent = 'Yayıncı oluşturulurken bir hata oluştu: ' + error.message;
-                createPublisherMessage.classList.add('text-red-600');
-                console.error("Create publisher error:", error);
-            }
-        });
-
-        // --- Real-time Listeners ---
-        function loadNewsFeed() {
-            if (!isAuthReady) return;
-            onSnapshot(query(newsCollection, where('status', '==', 'approved')), (snapshot) => {
-                newsFeed.innerHTML = '';
-                if (snapshot.empty) {
-                    newsFeed.innerHTML = '<p class="text-primary/70">Henüz yayınlanmış haber bulunmuyor.</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const newsData = doc.data();
-                        const newsItem = document.createElement('div');
-                        newsItem.classList.add('card', 'p-6', 'rounded-xl', 'shadow-md');
-                        
-                        let fileHtml = '';
-                        if (newsData.fileUrl) {
-                            fileHtml = `<a href="${newsData.fileUrl}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 transform hover:scale-105 inline-block mt-4">Dosyayı İndir</a>`;
-                        }
-
-                        newsItem.innerHTML = `
-                            <h3 class="text-xl font-bold text-primary">${newsData.title || 'Başlıksız Haber'}</h3>
-                            <p class="text-primary/70 mt-2">${newsData.content}</p>
-                            ${fileHtml}
-                            <p class="text-sm text-primary/50 mt-4">Yayınlanma Tarihi: ${newsData.createdAt?.toDate().toLocaleDateString() || 'Bilinmiyor'}</p>
-                        `;
-                        newsFeed.appendChild(newsItem);
-                    });
-                }
-            });
-        }
-
-        function loadPendingNews() {
-            if (!isAuthReady) return;
-            onSnapshot(query(newsCollection, where('status', '==', 'pending')), (snapshot) => {
-                pendingNewsList.innerHTML = '';
-                if (snapshot.empty) {
-                    pendingNewsList.innerHTML = '<p class="text-primary/70">Bekleyen haber bulunmuyor.</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const newsData = doc.data();
-                        const newsItem = document.createElement('div');
-                        newsItem.classList.add('card', 'p-4', 'rounded-lg', 'border', 'border-border-color');
-                        
-                        let fileHtml = '';
-                        if (newsData.fileUrl) {
-                            fileHtml = `<a href="${newsData.fileUrl}" target="_blank" class="text-blue-400 hover:underline">Ekli Dosya: ${newsData.fileName}</a>`;
-                        }
-
-                        newsItem.innerHTML = `
-                            <h3 class="text-xl font-semibold text-primary">${newsData.title || 'Başlıksız'}</h3>
-                            <p class="text-primary/70 mt-2">${newsData.content}</p>
-                            ${fileHtml}
-                            <div class="mt-4 space-x-2">
-                                <button onclick="window.approveNews('${doc.id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105">Onayla</button>
-                                <button onclick="window.deleteNews('${doc.id}')" class="bg-gray-600 text-white px-4 py-2 rounded-full hover:bg-gray-700 transition duration-300 transform hover:scale-105">Sil</button>
-                            </div>
-                        `;
-                        pendingNewsList.appendChild(newsItem);
-                    });
-                }
-            });
-        }
-        
-        function loadPublishers() {
-            if (!isAuthReady) return;
-            onSnapshot(query(publishersCollection), (snapshot) => {
-                publishersList.innerHTML = '';
-                if (snapshot.empty) {
-                    publishersList.innerHTML = '<p class="text-primary/70">Henüz yayıncı bulunmuyor.</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const publisher = doc.data();
-                        const publisherItem = document.createElement('li');
-                        publisherItem.classList.add('text-lg', 'font-medium', 'text-primary');
-                        publisherItem.textContent = publisher.email;
-                        publishersList.appendChild(publisherItem);
-                    });
-                }
-            });
-        }
-        
-        function loadPublisherApplications() {
-             if (!isAuthReady || auth.currentUser?.email !== 'baranss283@gmail.com') return;
-            
-            onSnapshot(query(publisherApplicationsCollection, where('status', '==', 'pending')), (snapshot) => {
-                publisherApplicationsList.innerHTML = '';
-                if (snapshot.empty) {
-                    publisherApplicationsList.innerHTML = '<p class="text-primary/70">Bekleyen başvuru bulunmuyor.</p>';
-                } else {
-                    snapshot.forEach(doc => {
-                        const application = doc.data();
-                        const appItem = document.createElement('div');
-                        appItem.classList.add('card', 'p-4', 'rounded-lg', 'border', 'border-border-color');
-                        appItem.innerHTML = `
-                            <p class="text-lg font-semibold text-primary">Başvuran: ${application.email}</p>
-                            <p class="text-primary/70 mt-2">Soru 1: ${application.question1}</p>
-                            <p class="text-primary/70 mt-2">Soru 2: ${application.question2}</p>
-                            <div class="mt-4 space-x-2">
-                                <button onclick="window.approvePublisherApplication('${doc.id}', '${application.userId}', '${application.email}')" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition duration-300">Onayla</button>
-                                <button onclick="window.rejectPublisherApplication('${doc.id}')" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300">Reddet</button>
-                            </div>
-                        `;
-                        publisherApplicationsList.appendChild(appItem);
-                    });
-                }
-            });
-        }
-        
-        function loadUsers() {
-             if (!isAuthReady) return;
-             onSnapshot(usersCollection, (snapshot) => {
-                usersList.innerHTML = '';
-                if (snapshot.empty) {
-                    usersList.innerHTML = '<p class="text-center text-primary/70">Henüz hiç kullanıcı yok.</p>';
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    const userData = doc.data();
-                    const userItem = document.createElement('div');
-                    userItem.className = 'card p-3 rounded-lg flex justify-between items-center';
-                    const isCurrentUser = doc.id === currentUserId;
-                    userItem.innerHTML = `
-                        <div>
-                            <p class="text-sm font-semibold">${userData.email}</p>
-                            <p class="text-xs text-primary/70">${userData.role}</p>
-                        </div>
-                        ${isCurrentUser ? '<span class="text-xs text-link-color">Siz</span>' : ''}
-                    `;
-                    usersList.appendChild(userItem);
-                });
-            }, (error) => {
-                console.error("Kullanıcılar yüklenirken hata oluştu: ", error);
-                showModalMessage("Kullanıcılar yüklenirken hata oluştu.", "error");
-            });
-        }
-
-        function loadChatMessages() {
-            if (!isAuthReady) return;
-            onSnapshot(query(chatCollection), (snapshot) => {
-                chatBox.innerHTML = '';
-                const messages = snapshot.docs.map(doc => doc.data());
-                messages.sort((a, b) => a.createdAt.toDate() - b.createdAt.toDate());
-
-                messages.forEach(messageData => {
-                    const messageElement = document.createElement('div');
-                    const isCurrentUser = messageData.userId === currentUserId;
-                    
-                    const classesToAdd = (isCurrentUser ? 'self-end bg-blue-600 text-white' : 'self-start bg-gray-300 text-gray-800').split(' ');
-                    messageElement.classList.add('my-2', 'p-3', 'rounded-lg', 'max-w-xs', 'break-words', 'shadow-md', 'transition-all', 'duration-300', ...classesToAdd);
-                    
-                    messageElement.innerHTML = `
-                        <p class="text-xs text-gray-200 mb-1">${isCurrentUser ? 'Siz' : 'Kullanıcı ' + messageData.userId}</p>
-                        <p>${messageData.message}</p>
-                    `;
-                    chatBox.appendChild(messageElement);
-                });
-                chatBox.scrollTop = chatBox.scrollHeight;
-            });
-        }
-        
-        // --- Publisher Actions ---
-        window.approveNews = async (docId) => {
-            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) {
-                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için yetkili bir yayıncı olmalısınız.");
-                return;
-            }
-            const newsRef = doc(db, `artifacts/${appId}/public/data/news/${docId}`);
-            try {
-                await updateDoc(newsRef, {
-                    status: 'approved'
-                });
-                window.showNotification('Yeni bir haber onaylandı!', 'success');
-                window.showMessageBox("Başarılı", "Haber onaylandı.");
-            } catch (error) {
-                console.error("Haber onaylama hatası:", error);
-                window.showMessageBox("Hata", "Haber onaylanırken bir sorun oluştu.");
-            }
-        };
-
-        window.deleteNews = async (docId) => {
-            if (!isAuthReady || (!isPublisher && auth.currentUser.email !== 'baranss283@gmail.com')) {
-                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için yetkili bir yayıncı olmalısınız.");
-                return;
-            }
-            const newsRef = doc(db, `artifacts/${appId}/public/data/news/${docId}`);
-            try {
-                await deleteDoc(newsRef);
-                window.showMessageBox("Başarılı", "Haber silindi.");
-            } catch (error) {
-                console.error("Haber silme hatası:", error);
-                window.showMessageBox("Hata", "Haber silinirken bir sorun oluştu.");
-            }
-        };
-
-        window.approvePublisherApplication = async (docId, userId, email) => {
-            if (!isAuthReady || auth.currentUser?.email !== 'baranss283@gmail.com') {
-                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için admin olmalısınız.");
-                return;
-            }
-            try {
-                await setDoc(doc(publishersCollection, userId), {
-                    email: email,
-                    appliedAt: new Date(),
-                    status: 'approved'
-                });
-                await updateDoc(doc(publisherApplicationsCollection, docId), {
-                    status: 'approved'
-                });
-                await setDoc(doc(usersCollection, userId), { role: 'Yayıncı' }, { merge: true });
-
-                window.showNotification(`${email} artık bir yayıncı!`, 'success');
-                window.showMessageBox("Başarılı", `${email} kullanıcısı artık bir yayıncı.`);
-            } catch (error) {
-                console.error("Başvuru onaylama hatası:", error);
-                window.showMessageBox("Hata", "Başvuru onaylanırken bir hata oluştu.");
-            }
-        };
-
-        window.rejectPublisherApplication = async (docId) => {
-             if (!isAuthReady || auth.currentUser?.email !== 'baranss283@gmail.com') {
-                window.showMessageBox("Yetki Hatası", "Bu işlemi gerçekleştirmek için admin olmalısınız.");
-                return;
-            }
-            try {
-                 await updateDoc(doc(publisherApplicationsCollection, docId), {
-                    status: 'rejected'
-                });
-                window.showMessageBox("Başarılı", "Başvuru reddedildi.");
-            } catch (error) {
-                console.error("Başvuru reddetme hatası:", error);
-                window.showMessageBox("Hata", "Başvuru reddedilirken bir hata oluştu.");
-            }
-        };
-        
-        // --- Event Listeners for new features ---
-        closeSettingsBtn.addEventListener('click', () => window.closeModal('settingsModal'));
-        closeAccountsBtn.addEventListener('click', () => window.closeModal('accountsModal'));
-
-        settingsModal.addEventListener('click', (e) => {
-            if (e.target === settingsModal) { window.closeModal('settingsModal'); }
-        });
-
-        accountsModal.addEventListener('click', (e) => {
-            if (e.target === accountsModal) { window.closeModal('accountsModal'); }
-        });
-        
-        themeSelect.addEventListener('change', () => {
-            body.classList.remove('light', 'dark');
-            body.classList.add(themeSelect.value);
-            saveSettings();
-        });
-
-        fontSelect.addEventListener('change', () => {
-            body.className = body.className.split(' ').filter(c => !c.startsWith('font-')).join(' ');
-            body.classList.add(fontSelect.value);
-            saveSettings();
-        });
-
-        // İlk görünümü ayarla
-        window.showView('home');
-        
-        // Sayfa yüklendiğinde ayarları ve bildirimleri göster
-        window.onload = function () {
-            loadSettings();
-            window.showNotification('Sistem güncellendi! Yeni özellikler için göz atın.', 'info');
         }
     </script>
 </body>
